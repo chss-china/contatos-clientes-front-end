@@ -16,19 +16,18 @@ interface IValueProps {
   selectedClientId: number | null;
   setSelectedClientId: React.Dispatch<React.SetStateAction<number | null>>;
   refresh: () => Promise<void>;
-  //isLoading: boolean;
-
-  // clientInfo: infoClient[];
-  // setClientInfo: React.Dispatch<React.SetStateAction<[]>>;
+  isAdmin: boolean;
+  setIsAdmin: React.Dispatch<React.SetStateAction<boolean>>;
 }
-//   useLogin: iLoginUser;
-// }
+
 export const ClientContext = createContext({} as IValueProps);
 
 interface iRegisterChildrenProps {
   children: React.ReactNode;
 }
-
+interface Ttoken {
+  tokenClient: string;
+}
 interface IregisterForm {
   fullname: string;
   email: string;
@@ -68,6 +67,11 @@ export interface Tlistclients {
   admin?: boolean;
   createdAt: string;
 }
+interface clientAuthentication {
+  id: number;
+  fullname: string;
+  email: string;
+}
 export const ClientProvider = ({ children }: iRegisterChildrenProps) => {
   const navigate = useNavigate();
   const [useLogin, setUserLogin] = useState({} as iLoginUser);
@@ -77,9 +81,12 @@ export const ClientProvider = ({ children }: iRegisterChildrenProps) => {
   const [openModal, setOpenModal] = useState(false);
   const [clientRemove, setRemoveClient] = useState();
   const [clientIdRegister, setClientIdRegister] = useState([]);
-  const [clientLoginId, setclientLoginId] = useState<null | undefined | string>(
-    null
+  const [clientDataAuthentication, setClientDataAuthentication] = useState(
+    {} as clientAuthentication
   );
+
+  const [isAdmin, setIsAdmin] = useState(false);
+
   // const [isLoading, setIsLoading] = useState(false);
   const refresh = async () => {
     try {
@@ -92,7 +99,6 @@ export const ClientProvider = ({ children }: iRegisterChildrenProps) => {
   const functionRegister = async (data: IregisterForm) => {
     try {
       const response = await api.post("/clients", data);
-      console.log(response.data);
       setClientInfo(response.data);
       toast.success("Usuario criado com sucesso");
       setTimeout(() => {
@@ -107,49 +113,59 @@ export const ClientProvider = ({ children }: iRegisterChildrenProps) => {
     try {
       const response = await api.post("/login", data);
       console.log(response);
-      navigate("/dashboard");
       let token = localStorage.setItem("@TokenClient", response.data.token);
-      console.log(token);
-      console.log(response.data.token);
       setUserLogin(response.data);
-      console.log(response.data);
+      setClientDataAuthentication(response.data.client);
+      console.log(response.data.client);
+      navigate("/dashboard");
     } catch (error: any) {
       toast.error("Usuario não encontrado");
     }
   };
-
   useEffect(() => {
-    // Função para fazer a requisição de listagem dos clientes
-    const fetchClients = async () => {
-      try {
-        const response = await api.get("/clients"); // Substitua a URL pela sua API
-        console.log(response);
-        setClientsGet(response.data);
-        setClientIdRegister(response.data.id);
-      } catch (error) {
-        console.error("Erro ao buscar clientes:", error);
-      }
-    };
+    // Chama a função para buscar os clientes ao fazer login
+    setClientDataAuthentication;
+  }, [openModal]);
 
-    fetchClients(); // Chama a função para buscar os clientes quando o componente montar
-  }, []);
-  const tokenClient = localStorage.getItem("@TokenClient");
-  console.log(tokenClient);
-
-  const functionClientEdit = async (data: TupdateClient) => {
+  // Função para fazer a requisição de listagem dos clientes
+  const fetchClients = async () => {
     try {
-      const response = await api.patch(`/clients/${selectedClientId}`, data, {
-        headers: {
-          Authorization: `Bearer ${tokenClient}`,
-        },
-      });
+      const response = await api.get("/clients"); // Substitua a URL pela sua API
+      setClientsGet(response.data);
+      setClientIdRegister(response.data.id);
       refresh();
-      console.log(response);
+    } catch (error) {
+      console.error("Erro ao buscar clientes:", error);
+    }
+  };
+  useEffect(() => {
+    // Chama a função para buscar os clientes ao fazer login
+    fetchClients();
+  }, []);
 
-      if (response.status === 200) {
-        toast.success("Client changed successfully");
-      } else {
-        toast.error("Unexpected response from the server");
+  const tokenClient = localStorage.getItem("@TokenClient");
+  // Obtém o ID do cliente autenticado a partir do token
+  //const authenticatedClientId = getAuthenticatedClientId(tokenClient);
+  //isAdmin || selectedClientId === authenticatedClientId
+  const functionClientEdit = async (data: TupdateClient) => {
+    console.log(isAdmin, selectedClientId, clientDataAuthentication.id);
+    try {
+      if (isAdmin || selectedClientId == clientDataAuthentication.id) {
+        const response = await api.patch(`/clients/${selectedClientId}`, data, {
+          headers: {
+            Authorization: `Bearer ${tokenClient}`,
+          },
+        }); // Chave adicionada aqui
+
+        refresh(); // Talvez o "refresh()" mencionado anteriormente fosse "atualizar()"?
+
+        console.log(response);
+
+        if (response.status === 200) {
+          toast.success("Cliente alterado com sucesso");
+        } else {
+          toast.error("Resposta inesperada do servidor");
+        }
       }
     } catch (error: any) {
       if (error.response) {
@@ -165,19 +181,37 @@ export const ClientProvider = ({ children }: iRegisterChildrenProps) => {
   const functionClientRemove = async (id: number) => {
     try {
       // Fazer a requisição para remover o cliente do servidor através da API
-      const response = await api.delete(`/clients/${id}`, {
-        headers: {
-          Authorization: `Bearer ${tokenClient}`,
-        },
-      });
-      console.log(response);
-      if (selectedClientId === id) {
-        setSelectedClientId(null);
+      if (isAdmin || selectedClientId == clientDataAuthentication.id) {
+        const response = await api.delete(`/clients/${id}`, {
+          headers: {
+            Authorization: `Bearer ${tokenClient}`,
+          },
+        });
+        console.log(response);
+        // Verificar se o cliente removido é o mesmo que está selecionado
+        if (selectedClientId === id) {
+          setSelectedClientId(null);
+        }
+
+        // Atualizar a lista de clientes após a remoção
+        refresh();
+
+        // Exemplo de mensagem de sucesso
+        toast.success("Cliente removido com sucesso!");
       }
-      refresh();
-    } catch (error) {
+    } catch (error: any) {
       // Lidar com erros de requisição ou exibição de mensagem de erro
-      console.error(error);
+      if (error.response) {
+        console.log("Erro na requisição:", error.response.data);
+        toast.error(error.response.data.message);
+      } else if (error.request) {
+        console.log(
+          "Erro na requisição (sem resposta do servidor):",
+          error.request
+        );
+      } else {
+        console.log("Erro:", error.message);
+      }
     }
   };
 
@@ -195,7 +229,8 @@ export const ClientProvider = ({ children }: iRegisterChildrenProps) => {
           selectedClientId,
           setSelectedClientId,
           refresh,
-          // isLoading,
+          isAdmin,
+          setIsAdmin,
         }}
       >
         {children}

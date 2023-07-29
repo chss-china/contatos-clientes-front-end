@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { useContext } from "react";
 import { Input } from "../../inputs/inputs";
 import { ClientContext } from "../../../providers/clientContext";
+import { FormContainer, SubmitButton } from "./styled.form";
 const formSchemaRegister = yup.object().shape({
   fullname: yup.string().required("Nome obrigatório"),
   email: yup.string().required("Email obrigatório").email("Email inválido"),
@@ -47,7 +48,7 @@ const RegisterForm = () => {
   });
 
   return (
-    <form onSubmit={handleSubmit(functionRegister)}>
+    <FormContainer onSubmit={handleSubmit(functionRegister)}>
       <Input
         label="Nome Completo"
         errors={errors.fullname?.message}
@@ -78,8 +79,8 @@ const RegisterForm = () => {
         register={register("telephone")}
         type="telephone"
       />
-      <button type="submit">Cadastrar</button>
-    </form>
+      <SubmitButton type="submit">Cadastrar</SubmitButton>
+    </FormContainer>
   );
 };
 

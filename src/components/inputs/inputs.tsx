@@ -1,4 +1,6 @@
 import { UseFormRegisterReturn } from "react-hook-form";
+import { ErrorMessage, Fieldset, Label } from "./inputsStyles";
+import { InputStyle } from "./inputsStyles";
 
 interface IpropsInput {
   register: UseFormRegisterReturn<string>;
@@ -8,10 +10,10 @@ interface IpropsInput {
 }
 export const Input = ({ register, errors, label, type }: IpropsInput) => {
   return (
-    <fieldset>
-      <label htmlFor="">{label}</label>
-      <input type={type} {...register} />
-      <p>{errors}</p>
-    </fieldset>
+    <Fieldset>
+      <Label htmlFor="">{label}</Label>
+      <InputStyle type={type} {...register} />
+      {errors && <ErrorMessage>{errors.message}</ErrorMessage>}
+    </Fieldset>
   );
 };

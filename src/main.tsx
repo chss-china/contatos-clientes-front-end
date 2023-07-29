@@ -5,11 +5,11 @@ import { BrowserRouter } from "react-router-dom";
 import { ClientProvider } from "./providers/clientContext.tsx";
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
-  //  <React.StrictMode>
+  //<React.StrictMode>
   <BrowserRouter>
     <ClientProvider>
       <App />
     </ClientProvider>
   </BrowserRouter>
-  //  </React.StrictMode>
+  // </React.StrictMode>
 );

@@ -4,6 +4,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useContext } from "react";
 import { ClientContext } from "../../providers/clientContext";
 import { Input } from "../inputs/inputs";
+import { StyledButton, StyledForm } from "./styled";
 
 const formSchemaLogin = yup.object().shape({
   email: yup.string().required("Email obrigatorio").email("Email invalido"),
@@ -31,7 +32,7 @@ const LoginForm = () => {
   });
 
   return (
-    <form onSubmit={handleSubmit(functionLogin)}>
+    <StyledForm onSubmit={handleSubmit(functionLogin)}>
       <Input
         label="Email"
         errors={errors.email?.message}
@@ -44,8 +45,9 @@ const LoginForm = () => {
         register={register("password")}
         type="password"
       />
-      <button type="submit">Entrar</button>
-    </form>
+      <StyledButton type="submit">Entrar</StyledButton>
+    </StyledForm>
   );
 };
+
 export default LoginForm;

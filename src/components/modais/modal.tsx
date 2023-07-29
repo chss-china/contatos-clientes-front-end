@@ -3,29 +3,29 @@ import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useContext } from "react";
 import { ClientContext } from "../../providers/clientContext";
+import { useState } from "react";
 // import { TupdateClient } from "./zodvalidator";
 // import { schemaUpdate } from "./zodvalidator";
 // import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import {
+  CloseButton,
+  ModalForm,
+  ModalHeader,
+  ModalTitle,
+  ModalWrapper,
+} from "./styled";
 interface TisOpen {
   isOpen: boolean;
 }
 const updateClientSchema = Yup.object().shape({
-  fullname: Yup.string()
-    .trim()
-    .min(2, "O nome deve conter pelo menos 2 caracteres")
-    .max(100, "O nome deve conter no máximo 100 caracteres")
-    .nullable(), // Campo opcional
-  email: Yup.string().trim().email("O email deve ser válido").nullable(), // Campo opcional
-  telephone: Yup.string()
-    .trim()
-    .min(8, "O telefone deve conter pelo menos 8 caracteres")
-    .max(20, "O telefone deve conter no máximo 20 caracteres")
-    .nullable(), // Campo opcional
+  fullname: Yup.string().trim().nullable(), // Campo opcional
+  email: Yup.string().trim().email().nullable(), // Campo opcional
+  telephone: Yup.string().trim().nullable(), // Campo opcional
   admin: Yup.boolean().nullable(), // Campo opcional
   password: Yup.string()
     .trim()
-    .min(6, "A senha deve conter pelo menos 6 caracteres")
-    .max(100, "A senha deve conter no máximo 100 caracteres")
     .matches(
       /^(?=.*[A-Z])/,
       "A senha deve conter pelo menos uma letra maiúscula"
@@ -44,6 +44,7 @@ export default function ModalEdit({ isOpen }: TisOpen) {
   const handleClientSelect = (clientId: number) => {
     setSelectedClientId(clientId);
   };
+
   const {
     functionClientEdit,
     setOpenModal,
@@ -58,15 +59,26 @@ export default function ModalEdit({ isOpen }: TisOpen) {
   } = useForm({
     resolver: yupResolver(updateClientSchema),
   });
+  {
+    console.log(selectedClientId);
+  }
+  const { isAdmin, setIsAdmin } = useContext(ClientContext);
+  console.log(isAdmin);
+
+  const handleAdminInputChange = (event: any) => {
+    setIsAdmin(event.target.checked);
+  };
+  console.log(isAdmin);
+
   if (isOpen) {
     return (
-      <div>
-        <div>
-          <h1>Clientes</h1>
-          <span onClick={() => setOpenModal(false)}>X</span>
-        </div>
+      <ModalWrapper>
+        <ModalHeader>
+          <ModalTitle>Clientes</ModalTitle>
+          <CloseButton onClick={() => setOpenModal(false)}>&times;</CloseButton>
+        </ModalHeader>
 
-        <form onSubmit={handleSubmit(functionClientEdit)}>
+        <ModalForm onSubmit={handleSubmit(functionClientEdit)}>
           <label>Nome Completo</label>
           <input type="text" {...register("fullname")} />
           {errors.fullname && <p>{errors.fullname.message}</p>}
@@ -79,11 +91,17 @@ export default function ModalEdit({ isOpen }: TisOpen) {
           <input type="text" {...register("telephone")} />
           {errors.telephone && <p>{errors.telephone.message}</p>}
 
-          <label>Admin</label>
-          <input type="text" {...register("admin")} />
+          <label>Voce é admin ? clique no seletor</label>
+          <input
+            type="checkbox"
+            checked={isAdmin}
+            {...register("admin")}
+            onChange={handleAdminInputChange}
+          />
+          <p>{Boolean(isAdmin)}</p>
           {errors.admin && <p>{errors.admin.message}</p>}
 
-          <label>Password</label>
+          <label>Senha</label>
           <input type="text" {...register("password")} />
           {errors.password && <p>{errors.password.message}</p>}
 
@@ -96,17 +114,18 @@ export default function ModalEdit({ isOpen }: TisOpen) {
                     functionClientRemove(selectedClientId);
                   } else {
                     // Mostrar mensagem de erro ou alerta caso não haja cliente selecionado
-                    console.error("Nenhum cliente selecionado.");
+                    toast.error("Nenhum cliente selecionado.");
                   }
                 }}
               >
-                Excluir
+                Excluir Cliente
               </span>
             </div>
           </section>
-        </form>
-      </div>
+        </ModalForm>
+      </ModalWrapper>
     );
   }
+
   return null;
 }
