@@ -134,9 +134,13 @@ export const ClientProvider = ({ children }: iRegisterChildrenProps) => {
       setClientsGet(response.data);
       setClientIdRegister(response.data.id);
       refresh();
+      refreshGet();
     } catch (error) {
       console.error("Erro ao buscar clientes:", error);
     }
+  };
+  const refreshGet = () => {
+    fetchClients();
   };
   useEffect(() => {
     // Chama a função para buscar os clientes ao fazer login
