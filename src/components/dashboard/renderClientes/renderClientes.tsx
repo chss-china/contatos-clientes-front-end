@@ -37,14 +37,6 @@ export const ClientGetAll: React.FC<ClientGetAllProps> = ({ client }) => {
         >
           Atualizar ou Excluir o Cliente
         </StyledButton>
-        {/* <button
-          onClick={() => {
-            setOpenModal(false);
-            setSelectedClientId(client.id);
-          }}
-        >
-          Excluir cliente
-        </button> */}
       </StyledDiv>
     </StyledLi>
   );

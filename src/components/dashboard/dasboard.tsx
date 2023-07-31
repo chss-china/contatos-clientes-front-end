@@ -5,7 +5,6 @@ import { useEffect } from "react";
 import ModalEdit from "../modais/modal";
 import { useNavigate } from "react-router-dom";
 import { Button, ClientList, PageWrapper, Title } from "./styles.dashboard";
-//import ModalEdit from "../modais/modal";
 interface Tlistclients {
   id: number;
   fullname: string;
@@ -16,8 +15,7 @@ interface Tlistclients {
 }
 const Dashboard: React.FC = () => {
   const navigate = useNavigate();
-  const { clientsGet, openModal, setOpenModal, refresh } =
-    useContext(ClientContext);
+  const { clientsGet, openModal, refresh } = useContext(ClientContext);
   useEffect(() => {
     async () => await refresh();
   }, []);

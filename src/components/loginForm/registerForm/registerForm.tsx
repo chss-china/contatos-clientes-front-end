@@ -10,18 +10,6 @@ const formSchemaRegister = yup.object().shape({
   email: yup.string().required("Email obrigatório").email("Email inválido"),
   telephone: yup.string().required("Telefone obrigatório"),
   admin: yup.boolean().default(false).nullable(),
-  // .test("is-admin-email", "o admin tem um e-mail unico", function (value) {
-  //   // If admin field is not true, skip validation
-  //   if (value !== true) {
-  //     return true;
-  //   }
-
-  //   // Get the email value from the form data
-  //   const email = this.resolve(yup.ref("email"));
-
-  //   // Check if the email is 'chss.bolsa99@gmail.com'
-  //   return email === "chss.bolsa99@gmail.com";
-  // }),
   password: yup
     .string()
     .required("Senha obrigatória")

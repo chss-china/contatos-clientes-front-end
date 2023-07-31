@@ -83,8 +83,6 @@ export const ClientProvider = ({ children }: iRegisterChildrenProps) => {
   );
 
   const [isAdmin, setIsAdmin] = useState(false);
-
-  // const [isLoading, setIsLoading] = useState(false);
   const refresh = async () => {
     try {
       const res = await api.get("/clients");
@@ -103,7 +101,7 @@ export const ClientProvider = ({ children }: iRegisterChildrenProps) => {
       }, 3000);
     } catch (error: any) {
       console.log(error);
-      toast.error(error.response.data.message);
+      toast.error(error.response.data);
     }
   };
   const functionLogin = async (data: ILoginForm) => {
@@ -123,12 +121,7 @@ export const ClientProvider = ({ children }: iRegisterChildrenProps) => {
       toast.error("Usuario não encontrado");
     }
   };
-  // useEffect(() => {
-  //   // Chama a função para buscar os clientes ao fazer login
-  //   setClientDataAuthentication;
-  // }, [openModal]);
 
-  // Função para fazer a requisição de listagem dos clientes
   const fetchClients = async () => {
     try {
       const response = await api.get("/clients"); // Substitua a URL pela sua API

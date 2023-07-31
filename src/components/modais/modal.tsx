@@ -4,9 +4,6 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useContext } from "react";
 import { ClientContext } from "../../providers/clientContext";
 import { useState } from "react";
-// import { TupdateClient } from "./zodvalidator";
-// import { schemaUpdate } from "./zodvalidator";
-// import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import {
@@ -20,17 +17,17 @@ interface TisOpen {
   isOpen: boolean;
 }
 const updateClientSchema = Yup.object().shape({
-  fullname: Yup.string().trim().nullable(), // Campo opcional
-  email: Yup.string().trim().email().nullable(), // Campo opcional
-  telephone: Yup.string().trim().nullable(), // Campo opcional
-  admin: Yup.boolean().nullable(), // Campo opcional
+  fullname: Yup.string().trim().nullable(),
+  email: Yup.string().trim().email().nullable(),
+  telephone: Yup.string().trim().nullable(),
+  admin: Yup.boolean().nullable(),
   password: Yup.string()
     .trim()
     .matches(
       /^(?=.*[A-Z])/,
       "A senha deve conter pelo menos uma letra maiúscula"
     )
-    .nullable(), // Campo opcional
+    .nullable(),
 });
 
 export default function ModalEdit({ isOpen }: TisOpen) {
@@ -62,13 +59,6 @@ export default function ModalEdit({ isOpen }: TisOpen) {
   {
     console.log(selectedClientId);
   }
-  const { isAdmin, setIsAdmin } = useContext(ClientContext);
-  console.log(isAdmin);
-
-  const handleAdminInputChange = (event: any) => {
-    setIsAdmin(event.target.checked);
-  };
-  console.log(isAdmin);
 
   if (isOpen) {
     return (
