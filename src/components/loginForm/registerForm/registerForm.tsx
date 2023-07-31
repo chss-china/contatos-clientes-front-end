@@ -46,7 +46,13 @@ const RegisterForm = () => {
   } = useForm<IregisterLoginForm>({
     resolver: yupResolver(formSchemaRegister),
   });
+  const { isAdmin, setIsAdmin } = useContext(ClientContext);
+  console.log(isAdmin);
 
+  const handleAdminInputChange = (event: any) => {
+    setIsAdmin(event.target.checked);
+  };
+  console.log(isAdmin);
   return (
     <FormContainer onSubmit={handleSubmit(functionRegister)}>
       <Input
@@ -67,12 +73,15 @@ const RegisterForm = () => {
         register={register("password")}
         type="password"
       />
-      <Input
-        label="Admin"
-        errors={errors.admin?.message}
-        register={register("admin")}
-        type="admin"
+      <label>Voce é admin ? clique no seletor</label>
+      <input
+        type="checkbox"
+        checked={isAdmin}
+        {...register("admin")}
+        onChange={handleAdminInputChange}
       />
+      <p>{Boolean(isAdmin)}</p>
+      {errors.admin && <p>{errors.admin.message}</p>}
       <Input
         label="Telefone"
         errors={errors.telephone?.message}

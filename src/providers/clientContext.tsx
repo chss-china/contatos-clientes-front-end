@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { api } from "../services/api";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import jwt from "jsonwebtoken";
 
 interface IValueProps {
   functionRegister: (data: IregisterForm) => void;
@@ -56,8 +55,6 @@ interface TupdateClient {
   fullname?: string | null | undefined;
   email?: string | null | undefined;
   telephone?: string | null | undefined;
-  admin?: boolean | null | undefined;
-  password?: string | null | undefined;
 }
 export interface Tlistclients {
   id: number;
@@ -116,16 +113,20 @@ export const ClientProvider = ({ children }: iRegisterChildrenProps) => {
       let token = localStorage.setItem("@TokenClient", response.data.token);
       setUserLogin(response.data);
       setClientDataAuthentication(response.data.client);
+      const idSession = sessionStorage.setItem(
+        "@clientId",
+        response.data.client.id
+      );
       console.log(response.data.client);
       navigate("/dashboard");
     } catch (error: any) {
       toast.error("Usuario não encontrado");
     }
   };
-  useEffect(() => {
-    // Chama a função para buscar os clientes ao fazer login
-    setClientDataAuthentication;
-  }, [openModal]);
+  // useEffect(() => {
+  //   // Chama a função para buscar os clientes ao fazer login
+  //   setClientDataAuthentication;
+  // }, [openModal]);
 
   // Função para fazer a requisição de listagem dos clientes
   const fetchClients = async () => {
@@ -152,31 +153,32 @@ export const ClientProvider = ({ children }: iRegisterChildrenProps) => {
   //const authenticatedClientId = getAuthenticatedClientId(tokenClient);
   //isAdmin || selectedClientId === authenticatedClientId
   const functionClientEdit = async (data: TupdateClient) => {
-    console.log(isAdmin, selectedClientId, clientDataAuthentication.id);
+    console.log("cheguei");
     try {
-      if (isAdmin || selectedClientId == clientDataAuthentication.id) {
-        const response = await api.patch(`/clients/${selectedClientId}`, data, {
-          headers: {
-            Authorization: `Bearer ${tokenClient}`,
-          },
-        }); // Chave adicionada aqui
+      const response = await api.patch(`/clients/${selectedClientId}`, data, {
+        headers: {
+          Authorization: `Bearer ${tokenClient}`,
+        },
+      });
+      console.log("passei na response", response);
+      refresh();
 
-        refresh(); // Talvez o "refresh()" mencionado anteriormente fosse "atualizar()"?
+      console.log(response);
 
-        console.log(response);
-
-        if (response.status === 200) {
-          toast.success("Cliente alterado com sucesso");
-        } else {
-          toast.error("Resposta inesperada do servidor");
-        }
+      if (response.status === 200) {
+        console.log("estou no erro");
+        toast.success("Cliente alterado com sucesso");
+      } else {
+        toast.error("Resposta inesperada do servidor");
       }
     } catch (error: any) {
       if (error.response) {
         console.log(error.response.status);
+        console.log("cai no catch do if");
         toast(error.response.data.message);
       } else {
         toast.error(error.message);
+        console.log("cai no else do catch");
         console.log(error.message);
       }
     }
@@ -185,24 +187,23 @@ export const ClientProvider = ({ children }: iRegisterChildrenProps) => {
   const functionClientRemove = async (id: number) => {
     try {
       // Fazer a requisição para remover o cliente do servidor através da API
-      if (isAdmin || selectedClientId == clientDataAuthentication.id) {
-        const response = await api.delete(`/clients/${id}`, {
-          headers: {
-            Authorization: `Bearer ${tokenClient}`,
-          },
-        });
-        console.log(response);
-        // Verificar se o cliente removido é o mesmo que está selecionado
-        if (selectedClientId === id) {
-          setSelectedClientId(null);
-        }
-
-        // Atualizar a lista de clientes após a remoção
-        refresh();
-
-        // Exemplo de mensagem de sucesso
-        toast.success("Cliente removido com sucesso!");
+      //  if (isAdmin || selectedClientId == clientDataAuthentication.id) {
+      const response = await api.delete(`/clients/${id}`, {
+        headers: {
+          Authorization: `Bearer ${tokenClient}`,
+        },
+      });
+      console.log(response);
+      // Verificar se o cliente removido é o mesmo que está selecionado
+      if (selectedClientId === id) {
+        setSelectedClientId(null);
       }
+
+      // Atualizar a lista de clientes após a remoção
+      refresh();
+
+      // Exemplo de mensagem de sucesso
+      toast.success("Cliente removido com sucesso!");
     } catch (error: any) {
       // Lidar com erros de requisição ou exibição de mensagem de erro
       if (error.response) {

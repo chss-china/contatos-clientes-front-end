@@ -91,16 +91,6 @@ export default function ModalEdit({ isOpen }: TisOpen) {
           <input type="text" {...register("telephone")} />
           {errors.telephone && <p>{errors.telephone.message}</p>}
 
-          <label>Voce é admin ? clique no seletor</label>
-          <input
-            type="checkbox"
-            checked={isAdmin}
-            {...register("admin")}
-            onChange={handleAdminInputChange}
-          />
-          <p>{Boolean(isAdmin)}</p>
-          {errors.admin && <p>{errors.admin.message}</p>}
-
           <label>Senha</label>
           <input type="text" {...register("password")} />
           {errors.password && <p>{errors.password.message}</p>}
