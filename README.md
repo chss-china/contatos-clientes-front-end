@@ -38,7 +38,6 @@ npx tsc --init
   "include": ["vite.config.ts"]
 }
 6. faça um arquivo .gitignore com essas informações,
-## HISTORICO
 # Logs
 logs
 *.log
