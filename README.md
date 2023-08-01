@@ -6,32 +6,37 @@
 2. executar o comando npx tsc --init para gerar seu tsconfig.json que permite personalizar como o TypeScript compila e trata o código do seu projeto.
 3. Em seguida, gere o arquivo tsconfig.json para personalizar como o TypeScript compila e trata o código do seu projeto. Execute o comando
 npx tsc --init
-4 . O arquivo tsconfig.json será gerado e incluirá algumas configurações padrão. Mais configurações adicionais tem que ser feitas neste arquivo.
-5 . aqui está abaixo todas configurações que fiz do ts config, isso é opcional, eu escolhi fazer dessa forma
-"target": "ES2020": Compilar para ECMAScript 2020.
-"useDefineForClassFields": true: Usar define para campos de classe.
-"lib": ["ES2020", "DOM", "DOM.Iterable"]: Incluir bibliotecas ES2020, DOM e DOM.Iterable.
-"module": "ESNext": Formato de módulo é ESNext (moderno).
-"skipLibCheck": true: Pular verificação de tipos em bibliotecas.
-"moduleResolution": "bundler": Resolução de módulo através do "bundler".
-"allowImportingTsExtensions": true: Permitir importar arquivos TypeScript usando .ts.
-"resolveJsonModule": true: Permitir importar arquivos JSON como módulos.
-"isolatedModules": true: Cada arquivo é um módulo independente.
-"noEmit": true: Não gerar arquivos JavaScript na compilação.
-"strict": true: Ativar verificações estritas.
-"noUnusedLocals": true: Identificar variáveis locais não utilizadas.
-"noUnusedParameters": true: Identificar parâmetros não utilizados.
-"noFallthroughCasesInSwitch": true: Verificar casos switch sem break.
-"include": ["src"]: Incluir arquivos da pasta "src" na compilação.
-"references": [{ "path": "./tsconfig.node.json" }]: Referenciar tsconfig.node.json.
-6. faça outro arquivo ts config.node.json e nele coloque essas configurações
-"compilerOptions": Opções do compilador TypeScript.
-"composite": true: Habilita o recurso "composite" do TypeScript.
-"skipLibCheck": true: Ignora a verificação de tipos em arquivos de biblioteca.
-"module": "ESNext": Utiliza o formato de módulo ESNext (moderno).
-"moduleResolution": "bundler": Resolução de módulo através de um "bundler" (empacotador de módulos).
-"allowSyntheticDefaultImports": true: Permite importações sintéticas padrão.
-"include": ["vite.config.ts"]: Inclui o arquivo vite.config.ts na compilação.
+3. O arquivo `tsconfig.json` será gerado com configurações padrão. Mais configurações adicionais podem ser feitas neste arquivo. Veja abaixo todas as configurações que fiz no arquivo `tsconfig.json`. Lembre-se de que essas configurações são opcionais e foram escolhidas de acordo com minhas preferências:
+4. "compilerOptions": {
+    "target": "ES2020",
+    "useDefineForClassFields": true,
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "skipLibCheck": true,
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true
+  },
+  "include": ["src"],
+  "references": [{ "path": "./tsconfig.node.json" }]
+}
+5 .Crie outro arquivo chamado tsconfig.node.json e inclua as seguintes configurações:
+   {
+  "compilerOptions": {
+    "composite": true,
+    "skipLibCheck": true,
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "allowSyntheticDefaultImports": true
+  },
+  "include": ["vite.config.ts"]
+}
 6. faça um arquivo .gitignore com essas informações,
 # Logs
 logs
