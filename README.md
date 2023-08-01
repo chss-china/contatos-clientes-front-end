@@ -38,6 +38,7 @@ npx tsc --init
   "include": ["vite.config.ts"]
 }
 6. faça um arquivo .gitignore com essas informações,
+## HISTORICO
 # Logs
 logs
 *.log
@@ -50,7 +51,6 @@ node_modules
 dist
 dist-ssr
 *.local
-# Editor directories and files
 .vscode/*
 !.vscode/extensions.json
 .idea
@@ -60,6 +60,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+# Editor directories and files
 7. por ulitmo npm install para instalar todas depedencias do projeto, para instalar todas dependencias até do typescript tem que estar no 
 diretorio da raiz
 9. entrar na pasta do projeto e executar npm install para instalar as outras dependencias
