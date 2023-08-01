@@ -62,6 +62,7 @@ dist-ssr
 *.sw?
 7. por ulitmo npm install para instalar todas depedencias do projeto, para instalar todas dependencias até do typescript tem que estar no 
 diretorio da raiz
+9. entrar na pasta do projeto e executar npm install para instalar as outras dependencias
 8. comando para iniciar o servidor npm run dev.
 
    
