@@ -1,5 +1,5 @@
 # React + TypeScript + Vite + TypeORM + Typescript
-- Front End do meu projeto full stack
+- Front End do meu projeto Full Stack
 
 # Comandos para instalção e configuraçoes
 1. se for começar um projeto do incio executar o comando npx create-vite@lates CADASTRO-CLIENTES-FRONT --template react-ts vai criar um projeto do inicio em react, typescript, vite com o nome do projeto CADASTRO-CLIENTES-FRONT.
