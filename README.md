@@ -6,7 +6,7 @@
 2. executar o comando npx tsc --init para gerar seu tsconfig.json que permite personalizar como o TypeScript compila e trata o código do seu projeto.
 3. Em seguida, gere o arquivo tsconfig.json para personalizar como o TypeScript compila e trata o código do seu projeto. Execute o comando
 npx tsc --init
-3. O arquivo `tsconfig.json` será gerado com configurações padrão. Mais configurações adicionais podem ser feitas neste arquivo. Veja abaixo todas as configurações que fiz no arquivo `tsconfig.json`. Lembre-se de que essas configurações são opcionais e foram escolhidas de acordo com minhas preferências:
+3. O arquivo `tsconfig.json` sera gerado com configurações padrão. Mais configurações adicionais podem ser feitas neste arquivo. Veja abaixo todas as configurações que fiz no arquivo `tsconfig.json`. Lembre-se de que essas configurações são opcionais e foram escolhidas de acordo com minhas preferências:
 4. "compilerOptions": {
     "target": "ES2020",
     "useDefineForClassFields": true,
