@@ -1,25 +1,17 @@
 import { useContext } from "react";
 import { ClientContext } from "../../providers/clientContext";
-import { ClientGetAll } from "./renderClientes/renderClientes";
+import { ClientGetAll } from "./dashboardContacts/renderClientes/renderClientes";
 import { useEffect } from "react";
 import ModalEdit from "../modais/modal";
 import { useNavigate } from "react-router-dom";
 import { Button, ClientList, PageWrapper, Title } from "./styles.dashboard";
-interface Tlistclients {
-  id: number;
-  fullname: string;
-  email: string;
-  telephone: string;
-  admin?: boolean;
-  createdAt: string;
-}
+import { Link } from "react-router-dom";
 const Dashboard: React.FC = () => {
   const navigate = useNavigate();
-  const { clientsGet, openModal, refresh } = useContext(ClientContext);
+  const { clientsGet, openModal, GetRefresh } = useContext(ClientContext);
   useEffect(() => {
-    async () => await refresh();
+    GetRefresh();
   }, []);
-
   function navigateLogin() {
     localStorage.getItem("@TokenClient");
     localStorage.removeItem("@TokenClient");
@@ -27,6 +19,7 @@ const Dashboard: React.FC = () => {
   }
   return (
     <PageWrapper>
+      <Link to="/dashboardcontacts">Mais informações do cliente</Link>
       <Button type="button" onClick={navigateLogin}>
         Sair
       </Button>

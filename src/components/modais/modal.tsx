@@ -3,7 +3,6 @@ import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useContext } from "react";
 import { ClientContext } from "../../providers/clientContext";
-import { useState } from "react";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import {
@@ -31,23 +30,11 @@ const updateClientSchema = Yup.object().shape({
 });
 
 export default function ModalEdit({ isOpen }: TisOpen) {
-  interface TupdateClient {
-    fullname?: string;
-    email?: string;
-    telephone?: string;
-    admin?: boolean;
-    password?: string;
-  }
-  const handleClientSelect = (clientId: number) => {
-    setSelectedClientId(clientId);
-  };
-
   const {
     functionClientEdit,
     setOpenModal,
     functionClientRemove,
     selectedClientId,
-    setSelectedClientId,
   } = useContext(ClientContext);
   const {
     register,
@@ -93,7 +80,6 @@ export default function ModalEdit({ isOpen }: TisOpen) {
                   if (selectedClientId !== null) {
                     functionClientRemove(selectedClientId);
                   } else {
-                    // Mostrar mensagem de erro ou alerta caso não haja cliente selecionado
                     toast.error("Nenhum cliente selecionado.");
                   }
                 }}

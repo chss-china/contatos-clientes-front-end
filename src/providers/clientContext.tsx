@@ -1,6 +1,6 @@
 import { createContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { api } from "../services/api";
+import { api } from "./../services/api";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -14,7 +14,7 @@ interface IValueProps {
   functionClientRemove: (id: number) => void;
   selectedClientId: number | null;
   setSelectedClientId: React.Dispatch<React.SetStateAction<number | null>>;
-  refresh: () => Promise<void>;
+  GetRefresh: () => void;
   isAdmin: boolean;
   setIsAdmin: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -24,9 +24,7 @@ export const ClientContext = createContext({} as IValueProps);
 interface iRegisterChildrenProps {
   children: React.ReactNode;
 }
-interface Ttoken {
-  tokenClient: string;
-}
+
 interface IregisterForm {
   fullname: string;
   email: string;
@@ -64,11 +62,7 @@ export interface Tlistclients {
   admin?: boolean;
   createdAt: string;
 }
-interface clientAuthentication {
-  id: number;
-  fullname: string;
-  email: string;
-}
+
 export const ClientProvider = ({ children }: iRegisterChildrenProps) => {
   const navigate = useNavigate();
   const [useLogin, setUserLogin] = useState({} as iLoginUser);
@@ -76,12 +70,7 @@ export const ClientProvider = ({ children }: iRegisterChildrenProps) => {
   const [clientsGet, setClientsGet] = useState([]);
   const [selectedClientId, setSelectedClientId] = useState<number | null>(null);
   const [openModal, setOpenModal] = useState(false);
-  const [clientRemove, setRemoveClient] = useState();
   const [clientIdRegister, setClientIdRegister] = useState([]);
-  const [clientDataAuthentication, setClientDataAuthentication] = useState(
-    {} as clientAuthentication
-  );
-
   const [isAdmin, setIsAdmin] = useState(false);
   const refresh = async () => {
     try {
@@ -101,7 +90,7 @@ export const ClientProvider = ({ children }: iRegisterChildrenProps) => {
       }, 3000);
     } catch (error: any) {
       console.log(error);
-      toast.error(error.response.data);
+      toast.error(error.response.data.message);
     }
   };
   const functionLogin = async (data: ILoginForm) => {
@@ -110,11 +99,11 @@ export const ClientProvider = ({ children }: iRegisterChildrenProps) => {
       console.log(response);
       let token = localStorage.setItem("@TokenClient", response.data.token);
       setUserLogin(response.data);
-      setClientDataAuthentication(response.data.client);
-      const idSession = sessionStorage.setItem(
+      const idSession = localStorage.setItem(
         "@clientId",
         response.data.client.id
       );
+      fetchClients();
       console.log(response.data.client);
       navigate("/dashboard");
     } catch (error: any) {
@@ -124,27 +113,20 @@ export const ClientProvider = ({ children }: iRegisterChildrenProps) => {
 
   const fetchClients = async () => {
     try {
-      const response = await api.get("/clients"); // Substitua a URL pela sua API
+      const response = await api.get("/clients");
       setClientsGet(response.data);
       setClientIdRegister(response.data.id);
-      refresh();
-      refreshGet();
+      GetRefresh();
     } catch (error) {
       console.error("Erro ao buscar clientes:", error);
     }
   };
-  const refreshGet = () => {
-    fetchClients();
-  };
+
   useEffect(() => {
-    // Chama a função para buscar os clientes ao fazer login
     fetchClients();
   }, []);
 
   const tokenClient = localStorage.getItem("@TokenClient");
-  // Obtém o ID do cliente autenticado a partir do token
-  //const authenticatedClientId = getAuthenticatedClientId(tokenClient);
-  //isAdmin || selectedClientId === authenticatedClientId
   const functionClientEdit = async (data: TupdateClient) => {
     console.log("cheguei");
     try {
@@ -154,7 +136,7 @@ export const ClientProvider = ({ children }: iRegisterChildrenProps) => {
         },
       });
       console.log("passei na response", response);
-      refresh();
+      GetRefresh();
 
       console.log(response);
 
@@ -179,26 +161,20 @@ export const ClientProvider = ({ children }: iRegisterChildrenProps) => {
 
   const functionClientRemove = async (id: number) => {
     try {
-      // Fazer a requisição para remover o cliente do servidor através da API
-      //  if (isAdmin || selectedClientId == clientDataAuthentication.id) {
       const response = await api.delete(`/clients/${id}`, {
         headers: {
           Authorization: `Bearer ${tokenClient}`,
         },
       });
       console.log(response);
-      // Verificar se o cliente removido é o mesmo que está selecionado
+
       if (selectedClientId === id) {
         setSelectedClientId(null);
       }
 
-      // Atualizar a lista de clientes após a remoção
-      refresh();
-
-      // Exemplo de mensagem de sucesso
+      GetRefresh();
       toast.success("Cliente removido com sucesso!");
     } catch (error: any) {
-      // Lidar com erros de requisição ou exibição de mensagem de erro
       if (error.response) {
         console.log("Erro na requisição:", error.response.data);
         toast.error(error.response.data.message);
@@ -210,6 +186,15 @@ export const ClientProvider = ({ children }: iRegisterChildrenProps) => {
       } else {
         console.log("Erro:", error.message);
       }
+    }
+  };
+  const clientId = localStorage.getItem("@UserId");
+  const GetRefresh = async () => {
+    try {
+      const response = await api.get(`/clients/${clientId}`);
+      console.log(response.data);
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -226,7 +211,7 @@ export const ClientProvider = ({ children }: iRegisterChildrenProps) => {
           functionClientRemove,
           selectedClientId,
           setSelectedClientId,
-          refresh,
+          GetRefresh,
           isAdmin,
           setIsAdmin,
         }}

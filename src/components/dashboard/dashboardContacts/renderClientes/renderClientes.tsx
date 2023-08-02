@@ -1,6 +1,6 @@
 import React from "react";
 import { useContext } from "react";
-import { ClientContext } from "../../../providers/clientContext";
+import { ClientContext } from "../../../../providers/clientContext";
 import { StyledDiv, StyledLi, StyledP, StyledButton } from "./styles";
 interface Tlistclients {
   id: number;

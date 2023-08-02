@@ -41,6 +41,7 @@ const RegisterForm = () => {
     setIsAdmin(event.target.checked);
   };
   console.log(isAdmin);
+
   return (
     <FormContainer onSubmit={handleSubmit(functionRegister)}>
       <Input
