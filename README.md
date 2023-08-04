@@ -16,7 +16,7 @@
 diretorio da raiz
 2. entrar na pasta do projeto e executar npm install para instalar as outras dependencias
 
-# rodar o servidor
+# Rodar o servidor
 3. comando para iniciar o servidor npm run dev.
 
    
