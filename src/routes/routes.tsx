@@ -3,7 +3,7 @@ import { AuthToken } from "../components/authToken/euthToken";
 import Dashboard from "../components/dashboard/dasboard";
 import LoginPage from "../pages/login/loginpage";
 import RegisterPage from "../pages/register/registerpage";
-import { DashboardContacts } from "../components/dashboard/dashboardContacts/dashboardcontacts";
+import { DashboardContacts } from "../components/dashboard/dashboardContacts/dashbordadncontacts/dashboardcontacts";
 import { Routes, Route } from "react-router-dom";
 const Router = () => {
   return (

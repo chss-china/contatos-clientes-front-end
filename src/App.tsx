@@ -4,7 +4,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
 import AppRouter from "./routes/routes.tsx";
-import { ClientProvider } from "./providers/clientContext.tsx";
+
 
 function App() {
   const [count, setCount] = useState(0);

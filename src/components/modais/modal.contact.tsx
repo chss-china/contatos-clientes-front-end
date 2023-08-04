@@ -1,15 +1,17 @@
 import { useContext } from "react";
-import { ContatoContext } from "../../providers/contactscontext";
+import { ContactContext } from "../../providers/contactscontext";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useNavigate } from "react-router-dom";
 import { IregisterForm } from "../../providers/contactscontext";
+import { api } from "../../services/api";
 import {
   CloseButton,
-  // ModalForm,
+  ModalForm,
   ModalHeader,
   ModalTitle,
   ModalWrapper,
@@ -34,13 +36,8 @@ const registerContactSchema = yup.object().shape({
 });
 
 export default function ModalRegisterContacts({ myisOpen }: TmyisOpen) {
-  const {
-    // functionRegisterContact,
-    setOpenModal,
-    // functionClientRemove,
-    selectedClientId,
-    setSelectedClientId,
-  } = useContext(ContatoContext);
+  const { setOpenModal, openModal, functionRegisterContact } =
+    useContext(ContactContext);
   const {
     register,
     handleSubmit,
@@ -48,18 +45,13 @@ export default function ModalRegisterContacts({ myisOpen }: TmyisOpen) {
   } = useForm({
     resolver: yupResolver(registerContactSchema),
   });
-  {
-    const handleSubmit = (Data: IregisterForm) => {
-      // Aqui você pode fazer o que for necessário com os dados do formulário antes de enviá-los
-      // para a função de registro (functionRegisterContact).
 
-      // Exemplo: Exibir os dados do formulário no console.
-      console.log(Data);
+  const handleFormSubmit = (data: IregisterForm) => {
+    functionRegisterContact(data); // Chamando a função functionRegisterContact com os dados do formulário
+  };
 
-      // Chamar a função de registro (functionRegisterContact) passando os dados do formulário.
-      // functionRegisterContact(Data);
-    };
-  }
+  console.log("estou aqui");
+
   if (myisOpen) {
     return (
       <ModalWrapper>
@@ -67,55 +59,51 @@ export default function ModalRegisterContacts({ myisOpen }: TmyisOpen) {
           <ModalTitle>
             Contatos dos Cliente,Somente para administradores
           </ModalTitle>
+
           <CloseButton onClick={() => setOpenModal(false)}>&times;</CloseButton>
         </ModalHeader>
-        {/* fullname: string;
-    email: string;
-    password: string;
-    zipCode: string;
-    city: string;
-    street: string;
-    state: string;
-    country: string;
-    telephone: string;
-    admin: boolean; */}
-        {/* <ModalForm onSubmit={handleSubmit(functionRegisterContact(data))}> */}
-        <label>Nome Completo</label>
-        <input type="text" {...register("fullname")} />
-        {errors.fullname && <p>{errors.fullname.message}</p>}
 
-        <label>Email</label>
-        <input type="text" {...register("email")} />
-        {errors.email && <p>{errors.email.message}</p>}
+        <ModalForm onSubmit={handleSubmit(handleFormSubmit)}>
+          <label>Nome Completo</label>
+          <input type="text" {...register("fullname")} />
+          {errors.fullname && <p>{errors.fullname.message}</p>}
 
-        <label>Senha</label>
-        <input type="text" {...register("password")} />
-        {errors.password && <p>{errors.password.message}</p>}
+          <label>Email</label>
+          <input type="text" {...register("email")} />
+          {errors.email && <p>{errors.email.message}</p>}
 
-        <label>Cep</label>
-        <input type="text" {...register("zipCode")} />
-        {errors.zipCode && <p>{errors.zipCode.message}</p>}
+          <label>Senha</label>
+          <input type="text" {...register("password")} />
+          {errors.password && <p>{errors.password.message}</p>}
 
-        <label>Cidade</label>
-        <input type="text" {...register("city")} />
-        {errors.city && <p>{errors.city.message}</p>}
+          <label>Cep</label>
+          <input type="text" {...register("zipCode")} />
+          {errors.zipCode && <p>{errors.zipCode.message}</p>}
 
-        <label>Endereço</label>
-        <input type="text" {...register("street")} />
-        {errors.street && <p>{errors.street.message}</p>}
+          <label>Cidade</label>
+          <input type="text" {...register("city")} />
+          {errors.city && <p>{errors.city.message}</p>}
 
-        <label>Estado</label>
-        <input type="text" {...register("state")} />
-        {errors.state && <p>{errors.state.message}</p>}
+          <label>Endereço</label>
+          <input type="text" {...register("street")} />
+          {errors.street && <p>{errors.street.message}</p>}
 
-        <label>Pais</label>
-        <input type="text" {...register("country")} />
-        {errors.country && <p>{errors.country.message}</p>}
+          <label>Estado</label>
+          <input type="text" {...register("state")} />
+          {errors.state && <p>{errors.state.message}</p>}
 
-        <section>
-          <button type="submit">Cadastrar Contato</button>
-          <div>
-            {/* <span
+          <label>Pais</label>
+          <input type="text" {...register("country")} />
+          {errors.country && <p>{errors.country.message}</p>}
+
+          <label>Telefone</label>
+          <input type="text" {...register("telephone")} />
+          {errors.telephone && <p>{errors.telephone.message}</p>}
+
+          <section>
+            <button type="submit">Cadastrar Contato</button>
+            <div>
+              {/* <span
                 onClick={() => {
                   if (selectedClientId !== null) {
                     functionClientRemove(selectedClientId);
@@ -127,9 +115,9 @@ export default function ModalRegisterContacts({ myisOpen }: TmyisOpen) {
               >
                 Excluir Cliente
               </span> */}
-          </div>
-        </section>
-        {/* </ModalForm> */}
+            </div>
+          </section>
+        </ModalForm>
       </ModalWrapper>
     );
   }

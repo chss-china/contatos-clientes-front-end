@@ -16,23 +16,26 @@ interface ClientGetAllProps {
 }
 
 export const ClientGetAll: React.FC<ClientGetAllProps> = ({ client }) => {
-  const { selectedClientId, setSelectedClientId, setOpenModal } =
-    useContext(ClientContext);
+  const {
+    selectedClientId,
+    setSelectedClientId,
+    setOpenModal,
+    setIsAdmin,
+    isAdmin,
+  } = useContext(ClientContext);
   console.log(selectedClientId);
-
+  console.log(isAdmin);
   return (
     <StyledLi>
       <StyledDiv>
         <StyledP>Nome Completo: {client.fullname}</StyledP> Email:{" "}
         <StyledP>{client.email}</StyledP>
-        <StyledP>Telefone:{client.telephone}</StyledP>{" "}
         <StyledP> Data de cadastro do cliente:{client.createdAt}</StyledP>
-        <StyledP>Nome Completo: {client.fullname}</StyledP> Email:{" "}
-        <StyledP>{client.email}</StyledP>
         <StyledButton
           onClick={() => {
             setOpenModal(true);
             setSelectedClientId(client.id);
+            setIsAdmin(client.admin!);
           }}
         >
           Atualizar ou Excluir o Cliente

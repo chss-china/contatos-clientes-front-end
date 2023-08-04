@@ -14,12 +14,15 @@ interface IValueProps {
   // functionClientRemove: (id: number) => void;
   selectedClientId: number | null;
   setSelectedClientId: React.Dispatch<React.SetStateAction<number | null>>;
-  refresh: () => Promise<void>;
+  //refresh: () => Promise<void>;
   isAdmin: boolean;
   setIsAdmin: React.Dispatch<React.SetStateAction<boolean>>;
+  getContacts: TlistContatos[];
+  setGetContacts: React.Dispatch<React.SetStateAction<TlistContatos[]>>;
+  functionRegisterContact: (data: IregisterForm) => void;
 }
 console.log("to aqui");
-export const ContatoContext = createContext({} as IValueProps);
+export const ContactContext = createContext({} as IValueProps);
 
 interface iRegisterChildrenProps {
   children: React.ReactNode;
@@ -32,7 +35,6 @@ export interface IregisterForm {
   fullname: string;
   email: string;
   telephone: string;
-  admin: boolean | undefined;
   password: string;
   zipCode: string;
   city: string;
@@ -94,75 +96,77 @@ interface clientAuthentication {
   email: string;
 }
 export const ContactProvider = ({ children }: iRegisterChildrenProps) => {
-  const [useLogin, setUserLogin] = useState({} as iLoginUser);
-  const [contactInfo, setContactInfo] = useState({} as infoClient[]); ///mudei o nome para contatos,
+  // const [useLogin, setUserLogin] = useState({} as iLoginUser);
+  // const [contactInfo, setContactInfo] = useState({} as infoClient[]); ///mudei o nome para contatos,
   // e o estate que vai função de regiester
-  const [clientsGet, setClientsGet] = useState([]);
+  const [getContacts, setGetContacts] = useState<TlistContatos[]>([]);
   const [selectedClientId, setSelectedClientId] = useState<number | null>(null);
   const [openModal, setOpenModal] = useState(false);
-  const [clientRemove, setRemoveClient] = useState();
-  const [clientIdRegister, setClientIdRegister] = useState([]);
-  const [clientDataAuthentication, setClientDataAuthentication] = useState(
-    {} as clientAuthentication
-  );
+  // const [clientRemove, setRemoveClient] = useState();
+  // const [clientIdRegister, setClientIdRegister] = useState([]);
+  // const [clientDataAuthentication, setClientDataAuthentication] = useState(
+  //   {} as clientAuthentication
+  // );
 
   const [isAdmin, setIsAdmin] = useState(false);
-  const refresh = async () => {
-    try {
-      const res = await api.get("/clients");
-      console.log("to aqui 2 ");
-      setClientsGet(res.data);
-    } catch (err) {
-      console.error(err);
-    }
-  };
-  console.log("to aqui 3");
-  const navigate = useNavigate();
-  const tokenClient = localStorage.getItem("@TokenClient");
-  const functionRegisterContact = async (data: IregisterForm) => {
-    console.log(" to aqui na função de cadasrar contato");
-    try {
-      console.log("enttrei no try daf unção de cadasrar contato");
-      const response = await api.post("/contacts", data, {
-        headers: {
-          Authorization: `Bearer ${tokenClient}`,
-        },
+  // const refresh = async () => {
+  //   try {
+  //     const res = await api.get("/clients");
+  //     console.log("to aqui 2 ");
+  //     setClientsGet(res.data);
+  //   } catch (err) {
+  //     console.error(err);
+  //   }
+  // };
+  // console.log("to aqui 3");
+  // const navigate = useNavigate();
+  // const tokenClient = localStorage.getItem("@TokenClient");
+  const functionRegisterContact = (data: IregisterForm) => {
+    const tokenClient = localStorage.getItem("@TokenClient");
+    console.log("Estou aqui na função de cadastrar contato");
+    const headers = {
+      Authorization: `Bearer ${tokenClient}`,
+    };
+    api
+      .post("/contacts", data, {
+        headers: headers,
+      })
+      .then((response) => {
+        setGetContacts(response.data);
+        console.log("Cheguei na resposta");
+        console.log(response.data);
+        console.log(response.data.message);
+        toast.success("Usuário criado com sucesso");
+      })
+      .catch((error) => {
+        console.log("Talvez tenha caído no catch");
+        console.log(error);
+        toast.error(
+          error.response?.data?.message || "Erro ao cadastrar contato."
+        );
       });
-      //setClientInfo(response.data);
-      console.log("cheguei na response");
-      console.log(response);
-      toast.success("Usuario criado com sucesso");
-      setTimeout(() => {
-        navigate("/");
-      }, 3000);
-    } catch (error: any) {
-      console.log("talvez tenha caido no catch");
-      console.log(error);
-      toast.error(error.response.data);
-    }
   };
 
   console.log("estou aqui");
-  // const refreshGet = () => {
+  const refreshGet = () => {
+    fetchClients();
+  };
+  const fetchClients = async () => {
+    try {
+      const response = await api.get("/clients"); // Substitua a URL pela sua API
+      setGetContacts(response.data);
+      console.log(response);
+      // setClientIdRegister(response.data.id);
+      GetRefresh();
+    } catch (error) {
+      console.error("Erro ao buscar clientes:", error);
+    }
+  };
 
-  //   fetchClients();
-  // };
-  // const fetchClients = async () => {
-  //   try {
-  //     const response = await api.get("/clients"); // Substitua a URL pela sua API
-  //     setClientsGet(response.data);
-  //     setClientIdRegister(response.data.id);
-  //     refresh();
-  //     refreshGet();
-  //   } catch (error) {
-  //     console.error("Erro ao buscar clientes:", error);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   // Chama a função para buscar os clientes ao fazer login
-  //   fetchClients();
-  // }, []);
+  useEffect(() => {
+    // Chama a função para buscar os clientes ao fazer login
+    fetchClients();
+  }, []);
 
   // // Obtém o ID do cliente autenticado a partir do token
   // //const authenticatedClientId = getAuthenticatedClientId(tokenClient);
@@ -235,25 +239,37 @@ export const ContactProvider = ({ children }: iRegisterChildrenProps) => {
   //   }
   // };
   // ja coloquei o contexto no provider de contatos
+  const clientId = localStorage.getItem("@UserId");
+  const GetRefresh = async () => {
+    try {
+      const response = await api.get(`/clients/${clientId}`);
+      console.log(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <>
-      <ContatoContext.Provider
+      <ContactContext.Provider
         value={{
           // functionRegisterContact,
-          // clientsGet,
+          //  clientsGet,
           // functionClientEdit,
           openModal,
           setOpenModal,
-          //  functionClientRemove,
-          selectedClientId,
-          setSelectedClientId,
-          refresh,
           isAdmin,
           setIsAdmin,
+          //  functionClientRemove,
+          // refresh,
+          selectedClientId,
+          setSelectedClientId,
+          setGetContacts,
+          getContacts,
+          functionRegisterContact,
         }}
       >
         {children}
-      </ContatoContext.Provider>
+      </ContactContext.Provider>
     </>
   );
 };

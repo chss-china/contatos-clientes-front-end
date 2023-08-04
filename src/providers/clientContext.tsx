@@ -72,6 +72,7 @@ export const ClientProvider = ({ children }: iRegisterChildrenProps) => {
   const [openModal, setOpenModal] = useState(false);
   const [clientIdRegister, setClientIdRegister] = useState([]);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [client, setclient] = useState({ isAdmin: false });
   const refresh = async () => {
     try {
       const res = await api.get("/clients");

@@ -24,6 +24,11 @@ const Dashboard: React.FC = () => {
         Sair
       </Button>
       <Title>Pagina de Clientes</Title>
+      <h2>
+        Administradores podem modificar qualquer cliente, exceto outros
+        administradores, enquanto um usuário logado somente altera suas próprias
+        informações.
+      </h2>
       <ClientList>
         {clientsGet.map((client) => (
           <ClientGetAll key={client.id} client={client} />
