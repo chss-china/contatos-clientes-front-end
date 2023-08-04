@@ -1,5 +1,5 @@
 # React + TypeScript + Vite + TypeORM + Typescript
-- Front End do meu projeto Full Stack. o Objetivo do projeto foi desenvolver um front para um serviço responsavel por simular agenda podendo adicionar e remover contatos e clientes, fizemos o projeto full stack inteiro dentro de 5 dias 
+- Front End do meu projeto Full Stack. o Objetivo do projeto foi desenvolver um front para um serviço responsavel por simular agenda podendo adicionar e remover contatos e clientes. Prazo do projeto full stack foi de 5 dias
 
 # Tecnoclogias e bibliotecas
 - React
