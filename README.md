@@ -53,6 +53,7 @@ no botão do header escrito mais informações do cliente voce tem acesso a cria
 depois voce clica no botão do header que vai abrir um modal para criar um cadastro, como o prazo do projeto foi pequeno quero permitir que essa pagina que lista os contatos seja mostrada apenas por administradores e não só usuario sendo logado.
 a pagina também tem proteção de rotas.
 estilização está bem basica mais quando estiver tempo pretendo deixar bem bonito
+O que eu fiz foi um exemplo do que eu entendi pela entrega, mais apenas um exemplo, não usarei o projeto sem terminar tudo que quero 
 
 
 
