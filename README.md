@@ -27,25 +27,45 @@ Você deverá criar um cadastro de clientes que poderá conter muitos contatos a
 Obs: nesse desafio utilize Javascript e/ou Typescript
 Tanto os clientes quanto os contatos devem ter as operações básicas de um CRUD;
 Um cliente poderá ter mais de um contato vinculado a ele;
-Um relatório (podendo ser em tela ou exportado em pdf) que mostre o cliente e seus contatos.
 
 É necessário implementar operações CRUD para ambos os clientes e contatos, o que significa que eu criei as listagem, atualizazaçãp e excluzão de registros tanto para cliente quanto para a de contato. Na parte de listagem quando terminar o projeto quero fazer requisições
 de paginação
 
 Necessário:
 Autenticação e autorização
-isso é autorização: Em programação, a autorizada refere-se ao processo de controlar o acesso a determinados recursos ou funcionalidades de um software com base na identidade e nos privilégios de um usuário ou entidade.
+- isso é autorização: Em programação, a autorizada refere-se ao processo de controlar o acesso a determinados recursos ou funcionalidades de um software com base na identidade e nos privilégios de um usuário ou entidade.
 
-Quando um usuário tenta acessar uma parte restrita de um programa ou aplicativo, o sistema de autorização entra em ação para verificar se esse usuário possui as permissões necessárias para executar uma ação desejada
-isso é Autenticação: um usuario logado por no nosso caso
+- Quando um usuário tenta acessar uma parte restrita de um programa ou aplicativo, o sistema de autorização entra em ação para verificar se esse usuário possui as permissões necessárias para executar uma ação desejada
 
-eu criei uma pagina de cadastro de clientes que o usuario pode escolher se é admin ou não, como o projeto foi em uma semana eu fiz dessa
-forma, mais como não terminei o projeto vou implementar o admin para apenas um usuario, essa parte do projeto faz parte da autorização 
-que já fiz
+- isso é Autenticação: um usuario logado por no nosso caso
 
-depois de cadastrar redireciona para o login com o cliente sendo admin ou não realizado no cadastro
-depois de fazeer o login é redirecionado para uma pagina de clientes onde administradores podem excluir,atualizar qualquer cliente exceto outros admimistradores, enquanto o usuario logado só pode alterar suas proprias informações, voce tem que procurar na listagem o usuario 
-que voce logou para alterar apenas suas informações, eu poderia ter feito de outra forma essa listagem mais nesse pouco tempo não consegui, ainda vou arrumar essa parte já que o crud também inclui listagem, nessa listagem só possui nome e email do cliente
+- Quando um usuário tenta acessar o sistema, o mesmo é solicitado a fornecer suas credenciais de login. Se as credenciais forem válidas, o usuário é autenticado e recebe permissão para acessar o sistema.
+- Autorização: Após o login, o sistema verifica se o usuário possui as permissões necessárias para acessar determinadas áreas restritas ou executar ações específicas. Caso o usuário não tenha as permissões adequadas, o acesso é negado.
+
+- Criei uma página de cadastro de clientes que permite ao usuário escolher se ele é um administrador ou não. Essa escolha determinará as permissões concedidas ao usuário após o login.
+Como o projeto tinha um prazo limitado, implementei o acesso de administração para apenas um usuário como exemplo.
+
+ - Após o cadastro, o usuário é redirecionado para a página de login, levando em consideração a condição de ser um cliente administrador ou não.
+   
+ - Após o login, os usuários são redirecionados para a página de clientes.
+Administradores têm permissão para excluir e atualizar qualquer cliente, exceto outros administradores.
+Usuários logados comuns só podem alterar suas próprias informações, sendo necessário localizar seu próprio usuário na listagem.
+
+ - Os contatos dos clientes são vinculados e acessados ​​através de botões na página de clientes.
+O acesso às informações de contato é restrito e somente os administradores têm permissão para criar contatos. Ao clicar no botão "Mais informações do cliente", os administradores têm acesso para criar contatos associados a esse cliente.
+
+- Implementei proteção nas rotas da aplicação para garantir que a página que lista os contatos seja acessível por usuarios logados ou administradores.
+
+- A criação de contatos é restrita aos administradores. Ao criar um contato para um cliente, verifique se o usuário logado é um administrador antes de permitir a criação do contato.
+
+- O que foi entregue até o momento é apenas um exemplo do que foi compreendido e implementado no prazo estipulado.
+O projeto não será utilizado sem que todas as funcionalidades integradas estejam concluídas.
+
+- Com base nessa abordagem, estou trabalhando para concluir todas as funcionalidades remanescentes, segurança aprimorada, usabilidade e estilização da aplicação, garantindo uma entrega completa e funcional. Meu objetivo é criar um sistema robusto e seguro, seguindo as melhores práticas de desenvolvimento web e segurança da informação.
+
+- A estilização inicial da aplicação é básica, pois o projeto tinha um prazo curto de desenvolvimento.
+Planejo melhorar a estilização futuramente, assim que tenha mais tempo disponível para dedicar ao projeto.
+
 
 um cliente tem os seus contatos vinculados, porém o acesso a informações de contato é restrito e não pode ser concedido a qualquer pessoa indiscriminadamente. É necessário implementar medidas de segurança, como autorização, por isso o contato só é criado por um administrador,
 somente um administrador tem acesso aos contatos, por isso na criação de contatos verifiquei se o usuario logado é adminitrador, clicando 
