@@ -53,16 +53,14 @@ export const ModalEditContact: React.FC<TmyisOpen> = ({ IsOpen }) => {
   {
   }
 
-  const handleCloseModal = () => {
-    // Chamando a função setModalEditRemove para fechar o modal
-    setRemoveContact(false);
-  };
   if (IsOpen) {
     return (
       <ModalWrapper>
         <ModalHeader>
           <ModalTitle>Contatos dos Clientes</ModalTitle>
-          <CloseButton onClick={() => handleCloseModal()}>&times;</CloseButton>
+          <CloseButton onClick={() => setRemoveContact(false)}>
+            &times;
+          </CloseButton>
         </ModalHeader>
 
         <ModalForm onSubmit={handleSubmit(functionContactEdit)}>

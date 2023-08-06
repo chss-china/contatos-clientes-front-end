@@ -52,27 +52,28 @@ export const ContactGetAll: React.FC<ContactGetAllProps> = (props) => {
   // };
 
   return (
-    <StyledLi>
-      <ModalEditContact IsOpen={contactRemove} />
-      <StyledDiv>
-        <StyledP>Nome Completo: {contact.fullname}</StyledP>
-        <StyledP>{contact.email}</StyledP>
-        <StyledP>Telefone: {contact.telephone}</StyledP>
-        <StyledP>Data de cadastro do cliente: {contact.createdAt}</StyledP>
-        {contact.country && <StyledP>Pais: {contact.country}</StyledP>}
-        {contact.state && <StyledP>Estado: {contact.state}</StyledP>}
-        {contact.city && <StyledP>Cidade: {contact.city}</StyledP>}
-        {contact.zipCode && <StyledP>Cep: {contact.zipCode}</StyledP>}
-        <StyledButton
-          onClick={() => {
-            setRemoveContact(true);
-            setSelectedContactId(contact.id);
-            setIsAdmin(contact.admin!);
-          }}
-        >
-          Atualizar ou Excluir o Cliente
-        </StyledButton>
-      </StyledDiv>
-    </StyledLi>
+    <>
+      <StyledLi>
+        <StyledDiv>
+          <StyledP>Nome Completo: {contact.fullname}</StyledP>
+          <StyledP>{contact.email}</StyledP>
+          <StyledP>Telefone: {contact.telephone}</StyledP>
+          <StyledP>Data de cadastro do cliente: {contact.createdAt}</StyledP>
+          {contact.country && <StyledP>Pais: {contact.country}</StyledP>}
+          {contact.state && <StyledP>Estado: {contact.state}</StyledP>}
+          {contact.city && <StyledP>Cidade: {contact.city}</StyledP>}
+          {contact.zipCode && <StyledP>Cep: {contact.zipCode}</StyledP>}
+          <StyledButton
+            onClick={() => {
+              setRemoveContact(true);
+              setSelectedContactId(contact.id);
+              setIsAdmin(contact.admin!);
+            }}
+          >
+            Atualizar ou Excluir o Cliente
+          </StyledButton>
+        </StyledDiv>
+      </StyledLi>
+    </>
   );
 };

@@ -109,6 +109,7 @@ export const ContactProvider = ({ children }: iRegisterChildrenProps) => {
   // const [contactInfo, setContactInfo] = useState({} as infoClient[]); ///mudei o nome para contatos,
   // e o estate que vai função de regiester
   const [getContacts, setGetContacts] = useState<TlistContatos[]>([]);
+  const [postContacts, setPostContacts] = useState<TlistContatos>();
   const [selectedContactId, setSelectedContactId] = useState<number | null>(
     null
   );
@@ -144,7 +145,7 @@ export const ContactProvider = ({ children }: iRegisterChildrenProps) => {
 
       console.log(response.data); // Aqui você pode tratar os dados retornados pela API após o cadastro
 
-      // Se quiser acessar algum dado específico do retorno, pode fazer assim:
+      // Dados do contato
       const {
         id,
         fullname,
@@ -157,15 +158,28 @@ export const ContactProvider = ({ children }: iRegisterChildrenProps) => {
         telephone,
         admin,
         createdAt,
-        client,
       } = response.data;
 
       console.log(id);
       console.log(fullname);
       console.log(email);
+
+      // Dados do cliente associado ao contato
+      const {
+        id: clientId,
+        fullname: clientFullname,
+        email: clientEmail,
+        telephone: clientTelephone,
+        admin: clientAdmin,
+        createdAt: clientCreatedAt,
+      } = response.data.client;
+
+      console.log(clientId);
+      console.log(clientFullname);
+      console.log(clientEmail);
       toast.success("Contato criado com sucesso");
+      setPostContacts(response.data.client);
       console.log(response);
-      // ... e assim por diante, com os outros campos que foram retornados
     } catch (error: any) {
       toast.error(error.response.data.message);
     }

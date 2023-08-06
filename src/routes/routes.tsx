@@ -8,24 +8,13 @@ import { Routes, Route } from "react-router-dom";
 const AppRoutes = () => {
   return (
     <Routes>
-      {/* Rotas para autenticação */}
       <Route element={<AuthLogin />}>
-        {/* Rota da página de login */}
         <Route path="/" element={<LoginPage />} />
-
-        {/* Rota da página de registro */}
         <Route path="/register" element={<RegisterPage />} />
-
-        {/* Rota padrão (caso não corresponda a nenhuma rota acima) */}
         <Route path="*" element={<LoginPage />} />
       </Route>
-
-      {/* Rotas autenticadas */}
       <Route element={<AuthToken />}>
-        {/* Rota da página do dashboard */}
         <Route path="/dashboard" element={<Dashboard />} />
-
-        {/* Rota da página de contatos no dashboard */}
         <Route path="/dashboardcontacts" element={<DashboardContacts />} />
       </Route>
     </Routes>

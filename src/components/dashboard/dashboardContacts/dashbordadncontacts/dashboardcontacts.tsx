@@ -16,6 +16,7 @@ export const DashboardContacts = () => {
     getContacts,
     isAdmin,
     setIsAdmin,
+    contactRemove,
   } = useContext(ContactContext);
   const navigate = useNavigate();
   // useEffect(() => {
@@ -46,6 +47,7 @@ export const DashboardContacts = () => {
             <ContactGetAll key={contact.id} contact={contact} />
           ))}
       </ClientList>
+      <ModalEditContact IsOpen={contactRemove} />
     </>
   );
 };
