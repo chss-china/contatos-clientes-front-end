@@ -1,14 +1,10 @@
-import { useContext } from "react";
-import { ContactContext } from "../../providers/contactscontext";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { ClientContext } from "../../providers/clientContext";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useNavigate } from "react-router-dom";
-import { IregisterForm } from "../../providers/contactscontext";
-import { api } from "../../services/api";
 import {
   CloseButton,
   ModalForm,
@@ -16,28 +12,37 @@ import {
   ModalTitle,
   ModalWrapper,
 } from "./styled";
-interface TmyisOpen {
-  myisOpen: boolean;
+import { ContactContext } from "../../providers/contactscontext";
+interface TisOpen {
+  isOpen: boolean;
 }
 const registerContactSchema = yup.object().shape({
-  fullname: yup.string().required("Nome completo é obrigatório."),
-  email: yup
-    .string()
-    .email("E-mail inválido.")
-    .required("E-mail é obrigatório."),
-  telephone: yup.string().required("Telefone é obrigatório."),
-  admin: yup.boolean(),
-  password: yup.string().required("Senha é obrigatória."),
-  zipCode: yup.string().required("CEP é obrigatório."),
-  city: yup.string().required("Cidade é obrigatória."),
-  street: yup.string().required("Endereço é obrigatório."),
-  state: yup.string().required("Estado é obrigatório."),
-  country: yup.string().required("País é obrigatório."),
+  fullname: yup.string().nullable().optional(),
+  email: yup.string().email("E-mail inválido.").nullable().optional(),
+  telephone: yup.string().nullable().optional(),
+  admin: yup.boolean().nullable().optional(),
+  password: yup.string().nullable().optional(),
+  zipCode: yup.string().nullable().optional(),
+  city: yup.string().nullable().optional(),
+  street: yup.string().nullable().optional(),
+  state: yup.string().nullable().optional(),
+  country: yup.string().nullable().optional(),
 });
+interface TmyisOpen {
+  IsOpen: boolean;
+}
+export const ModalEditContact: React.FC<TmyisOpen> = ({ IsOpen }) => {
+  const {
+    functionContactEdit,
+    openModal,
+    setOpenModal,
+    functionContactRemove,
+    setRemoveContact,
+    selectedContactId,
+    setSelectedContactId,
+    contactRemove,
+  } = useContext(ContactContext);
 
-export default function ModalRegisterContacts({ myisOpen }: TmyisOpen) {
-  const { setOpenModal, openModal, functionRegisterContact } =
-    useContext(ContactContext);
   const {
     register,
     handleSubmit,
@@ -45,25 +50,22 @@ export default function ModalRegisterContacts({ myisOpen }: TmyisOpen) {
   } = useForm({
     resolver: yupResolver(registerContactSchema),
   });
+  {
+  }
 
-  const handleFormSubmit = (data: IregisterForm) => {
-    functionRegisterContact(data); // Chamando a função functionRegisterContact com os dados do formulário
+  const handleCloseModal = () => {
+    // Chamando a função setModalEditRemove para fechar o modal
+    setRemoveContact(false);
   };
-
-  console.log("estou aqui");
-
-  if (myisOpen) {
+  if (IsOpen) {
     return (
       <ModalWrapper>
         <ModalHeader>
-          <ModalTitle>
-            Contatos dos Cliente,Somente para administradores
-          </ModalTitle>
-
-          <CloseButton onClick={() => setOpenModal(false)}>&times;</CloseButton>
+          <ModalTitle>Contatos dos Clientes</ModalTitle>
+          <CloseButton onClick={() => handleCloseModal()}>&times;</CloseButton>
         </ModalHeader>
 
-        <ModalForm onSubmit={handleSubmit(handleFormSubmit)}>
+        <ModalForm onSubmit={handleSubmit(functionContactEdit)}>
           <label>Nome Completo</label>
           <input type="text" {...register("fullname")} />
           {errors.fullname && <p>{errors.fullname.message}</p>}
@@ -101,26 +103,24 @@ export default function ModalRegisterContacts({ myisOpen }: TmyisOpen) {
           {errors.telephone && <p>{errors.telephone.message}</p>}
 
           <section>
-            <button type="submit">Cadastrar Contato</button>
+            <button>Salvar Alterações</button>
             <div>
-              {/* <span
+              <span
                 onClick={() => {
-                  if (selectedClientId !== null) {
-                    functionClientRemove(selectedClientId);
+                  if (selectedContactId !== null) {
+                    functionContactRemove(selectedContactId);
                   } else {
-                    // Mostrar mensagem de erro ou alerta caso não haja cliente selecionado
-                    toast.error("Nenhum cliente selecionado.");
+                    toast.error("Nenhum contato selecionado.");
                   }
                 }}
               >
-                Excluir Cliente
-              </span> */}
+                Excluir Contato
+              </span>
             </div>
           </section>
         </ModalForm>
       </ModalWrapper>
     );
   }
-
   return null;
-}
+};

@@ -3,8 +3,7 @@ import "./App.css";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
-import AppRouter from "./routes/routes.tsx";
-
+import AppRoutes from "./routes/routes";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -23,7 +22,8 @@ function App() {
         pauseOnHover
         theme="light"
       />
-      <AppRouter />
+
+      <AppRoutes />
     </>
   );
 }

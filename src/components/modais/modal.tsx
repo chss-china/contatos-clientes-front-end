@@ -44,7 +44,6 @@ export default function ModalEdit({ isOpen }: TisOpen) {
     resolver: yupResolver(updateClientSchema),
   });
   {
-    console.log(selectedClientId);
   }
 
   if (isOpen) {

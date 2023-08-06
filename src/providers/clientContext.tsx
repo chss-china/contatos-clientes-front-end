@@ -125,6 +125,8 @@ export const ClientProvider = ({ children }: iRegisterChildrenProps) => {
 
   useEffect(() => {
     fetchClients();
+    const intervalId = setInterval(fetchClients, 5000);
+    return () => clearInterval(intervalId);
   }, []);
 
   const tokenClient = localStorage.getItem("@TokenClient");

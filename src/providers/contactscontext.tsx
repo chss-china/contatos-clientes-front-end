@@ -12,16 +12,19 @@ interface IValueProps {
   openModal: boolean;
   setOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
   // functionClientRemove: (id: number) => void;
-  selectedClientId: number | null;
-  setSelectedClientId: React.Dispatch<React.SetStateAction<number | null>>;
+  selectedContactId: number | null;
+  setSelectedContactId: React.Dispatch<React.SetStateAction<number | null>>;
   //refresh: () => Promise<void>;
   isAdmin: boolean;
   setIsAdmin: React.Dispatch<React.SetStateAction<boolean>>;
   getContacts: TlistContatos[];
   setGetContacts: React.Dispatch<React.SetStateAction<TlistContatos[]>>;
   functionRegisterContact: (data: IregisterForm) => void;
+  functionContactEdit: (data: TupdateContact) => void;
+  functionContactRemove: (id: number) => void;
+  contactRemove: boolean;
+  setRemoveContact: React.Dispatch<React.SetStateAction<boolean>>;
 }
-console.log("to aqui");
 export const ContactContext = createContext({} as IValueProps);
 
 interface iRegisterChildrenProps {
@@ -62,10 +65,16 @@ interface infoClient {
   state: string;
   country: string;
 }
-interface TupdateClient {
+interface TupdateContact {
   fullname?: string | null | undefined;
   email?: string | null | undefined;
   telephone?: string | null | undefined;
+  password?: string | null | undefined;
+  zipCode?: string | null | undefined;
+  city?: string | null | undefined;
+  street?: string | null | undefined;
+  state?: string | null | undefined;
+  country?: string | null | undefined;
 }
 export interface TlistContatos {
   //atualizei para lista de contatos que vai na função de registro que é a resposta do que nos retorna
@@ -100,9 +109,11 @@ export const ContactProvider = ({ children }: iRegisterChildrenProps) => {
   // const [contactInfo, setContactInfo] = useState({} as infoClient[]); ///mudei o nome para contatos,
   // e o estate que vai função de regiester
   const [getContacts, setGetContacts] = useState<TlistContatos[]>([]);
-  const [selectedClientId, setSelectedClientId] = useState<number | null>(null);
+  const [selectedContactId, setSelectedContactId] = useState<number | null>(
+    null
+  );
   const [openModal, setOpenModal] = useState(false);
-  // const [clientRemove, setRemoveClient] = useState();
+  const [contactRemove, setRemoveContact] = useState(false);
   // const [clientIdRegister, setClientIdRegister] = useState([]);
   // const [clientDataAuthentication, setClientDataAuthentication] = useState(
   //   {} as clientAuthentication
@@ -119,135 +130,140 @@ export const ContactProvider = ({ children }: iRegisterChildrenProps) => {
   //   }
   // };
   // console.log("to aqui 3");
-  // const navigate = useNavigate();
-  // const tokenClient = localStorage.getItem("@TokenClient");
-  const functionRegisterContact = (data: IregisterForm) => {
+  //const navigate = useNavigate();
+  const functionRegisterContact = async (formData: IregisterForm) => {
     const tokenClient = localStorage.getItem("@TokenClient");
-    console.log("Estou aqui na função de cadastrar contato");
     const headers = {
       Authorization: `Bearer ${tokenClient}`,
     };
-    api
-      .post("/contacts", data, {
+
+    try {
+      const response = await api.post("/contacts", formData, {
         headers: headers,
-      })
-      .then((response) => {
-        setGetContacts(response.data);
-        console.log("Cheguei na resposta");
-        console.log(response.data);
-        console.log(response.data.message);
-        toast.success("Usuário criado com sucesso");
-      })
-      .catch((error) => {
-        console.log("Talvez tenha caído no catch");
-        console.log(error);
-        toast.error(
-          error.response?.data?.message || "Erro ao cadastrar contato."
-        );
       });
+
+      console.log(response.data); // Aqui você pode tratar os dados retornados pela API após o cadastro
+
+      // Se quiser acessar algum dado específico do retorno, pode fazer assim:
+      const {
+        id,
+        fullname,
+        email,
+        zipCode,
+        city,
+        street,
+        state,
+        country,
+        telephone,
+        admin,
+        createdAt,
+        client,
+      } = response.data;
+
+      console.log(id);
+      console.log(fullname);
+      console.log(email);
+      toast.success("Contato criado com sucesso");
+      console.log(response);
+      // ... e assim por diante, com os outros campos que foram retornados
+    } catch (error: any) {
+      toast.error(error.response.data.message);
+    }
   };
 
-  console.log("estou aqui");
   const refreshGet = () => {
     fetchClients();
   };
   const fetchClients = async () => {
     try {
-      const response = await api.get("/clients"); // Substitua a URL pela sua API
+      const response = await api.get("/contacts"); // Replace with your API endpoint
       setGetContacts(response.data);
-      console.log(response);
-      // setClientIdRegister(response.data.id);
-      GetRefresh();
     } catch (error) {
       console.error("Erro ao buscar clientes:", error);
     }
   };
 
   useEffect(() => {
-    // Chama a função para buscar os clientes ao fazer login
+    // Fetch clients initially when the component mounts
     fetchClients();
+    // Fetch clients every 5 seconds using setInterval
+    const intervalId = setInterval(fetchClients, 3000);
+    // Clean up the interval when the component unmounts
+    return () => clearInterval(intervalId);
   }, []);
 
-  // // Obtém o ID do cliente autenticado a partir do token
-  // //const authenticatedClientId = getAuthenticatedClientId(tokenClient);
-  // //isAdmin || selectedClientId === authenticatedClientId
-  // const functionClientEdit = async (data: TupdateClient) => {
-  //   console.log("cheguei");
-  //   try {
-  //     const response = await api.patch(`/clients/${selectedClientId}`, data, {
-  //       headers: {
-  //         Authorization: `Bearer ${tokenClient}`,
-  //       },
-  //     });
-  //     console.log("passei na response", response);
-  //     refresh();
-
-  //     console.log(response);
-
-  //     if (response.status === 200) {
-  //       console.log("estou no erro");
-  //       toast.success("Cliente alterado com sucesso");
-  //     } else {
-  //       toast.error("Resposta inesperada do servidor");
-  //     }
-  //   } catch (error: any) {
-  //     if (error.response) {
-  //       console.log(error.response.status);
-  //       console.log("cai no catch do if");
-  //       toast(error.response.data.message);
-  //     } else {
-  //       toast.error(error.message);
-  //       console.log("cai no else do catch");
-  //       console.log(error.message);
-  //     }
-  //   }
-  // };
-
-  // const functionClientRemove = async (id: number) => {
-  //   try {
-  //     // Fazer a requisição para remover o cliente do servidor através da API
-  //     //  if (isAdmin || selectedClientId == clientDataAuthentication.id) {
-  //     const response = await api.delete(`/clients/${id}`, {
-  //       headers: {
-  //         Authorization: `Bearer ${tokenClient}`,
-  //       },
-  //     });
-  //     console.log(response);
-  //     // Verificar se o cliente removido é o mesmo que está selecionado
-  //     if (selectedClientId === id) {
-  //       setSelectedClientId(null);
-  //     }
-
-  //     // Atualizar a lista de clientes após a remoção
-  //     refresh();
-
-  //     // Exemplo de mensagem de sucesso
-  //     toast.success("Cliente removido com sucesso!");
-  //   } catch (error: any) {
-  //     // Lidar com erros de requisição ou exibição de mensagem de erro
-  //     if (error.response) {
-  //       console.log("Erro na requisição:", error.response.data);
-  //       toast.error(error.response.data.message);
-  //     } else if (error.request) {
-  //       console.log(
-  //         "Erro na requisição (sem resposta do servidor):",
-  //         error.request
-  //       );
-  //     } else {
-  //       console.log("Erro:", error.message);
-  //     }
-  //   }
-  // };
-  // ja coloquei o contexto no provider de contatos
-  const clientId = localStorage.getItem("@UserId");
-  const GetRefresh = async () => {
+  var tokenClient = localStorage.getItem("@TokenClient");
+  const functionContactEdit = async (data: TupdateContact) => {
     try {
-      const response = await api.get(`/clients/${clientId}`);
-      console.log(response.data);
-    } catch (error) {
-      console.log(error);
+      const response = await api.patch(`/contacts/${selectedContactId}`, data, {
+        headers: {
+          Authorization: `Bearer ${tokenClient}`,
+        },
+      });
+      console.log("passei na response", response.data);
+
+      /// console.log(response);
+
+      if (response.status === 200) {
+        toast.success("Cliente alterado com sucesso");
+      } else {
+        toast.error("Resposta inesperada do servidor");
+      }
+    } catch (error: any) {
+      if (error.response) {
+        console.log(error.response.status);
+        console.log("cai no catch do if");
+        toast(error.response.data.message);
+      } else {
+        toast.error(error.message);
+        console.log(error.message);
+      }
     }
   };
+
+  const functionContactRemove = async (id: number) => {
+    try {
+      // Fazer a requisição para remover o cliente do servidor através da API
+      //  if (isAdmin || selectedClientId == clientDataAuthentication.id) {
+      const response = await api.delete(`/contacts/${id}`, {
+        headers: {
+          Authorization: `Bearer ${tokenClient}`,
+        },
+      });
+      // Verificar se o cliente removido é o mesmo que está selecionado
+      if (selectedContactId === id) {
+        setSelectedContactId(null);
+      }
+
+      // Atualizar a lista de clientes após a remoção
+      // refresh();
+
+      // Exemplo de mensagem de sucesso
+      toast.success("Cliente removido com sucesso!");
+    } catch (error: any) {
+      // Lidar com erros de requisição ou exibição de mensagem de erro
+      if (error.response) {
+        console.log("Erro na requisição:", error.response.data);
+        toast.error(error.response.data.message);
+      } else if (error.request) {
+        console.log(
+          "Erro na requisição (sem resposta do servidor):",
+          error.request
+        );
+      } else {
+        console.log("Erro:", error.message);
+      }
+    }
+  };
+  const clientId = localStorage.getItem("@UserId");
+  // const GetRefresh = async () => {
+  //   try {
+  //     const response = await api.get(`/clients/${clientId}`);
+  //     console.log(response.data);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
   return (
     <>
       <ContactContext.Provider
@@ -259,13 +275,17 @@ export const ContactProvider = ({ children }: iRegisterChildrenProps) => {
           setOpenModal,
           isAdmin,
           setIsAdmin,
+          functionContactRemove,
           //  functionClientRemove,
           // refresh,
-          selectedClientId,
-          setSelectedClientId,
+          selectedContactId,
+          setSelectedContactId,
           setGetContacts,
           getContacts,
           functionRegisterContact,
+          functionContactEdit,
+          contactRemove,
+          setRemoveContact,
         }}
       >
         {children}

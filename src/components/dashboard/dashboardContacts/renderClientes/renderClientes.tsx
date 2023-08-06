@@ -2,6 +2,8 @@ import React from "react";
 import { useContext } from "react";
 import { ClientContext } from "../../../../providers/clientContext";
 import { StyledDiv, StyledLi, StyledP, StyledButton } from "./styles";
+import { ContactContext } from "../../../../providers/contactscontext";
+import { ModalEditContact } from "../../../modais/modaleditcontacts";
 interface Tlistclients {
   id: number;
   fullname: string;
@@ -23,8 +25,7 @@ export const ClientGetAll: React.FC<ClientGetAllProps> = ({ client }) => {
     setIsAdmin,
     isAdmin,
   } = useContext(ClientContext);
-  console.log(selectedClientId);
-  console.log(isAdmin);
+
   return (
     <StyledLi>
       <StyledDiv>

@@ -7,6 +7,7 @@ import {
   StyledLi,
   StyledP,
 } from "../dashboardContacts/renderClientes/styles";
+import { ModalEditContact } from "../../modais/modaleditcontacts";
 
 export interface TlistContatos {
   //atualizei para lista de contatos que vai na função de registro que é a resposta do que nos retorna
@@ -33,32 +34,39 @@ export interface TlistContatos {
 interface ContactGetAllProps {
   contact: TlistContatos;
 }
-export const ContactGetAll = ({ contact }: ContactGetAllProps) => {
+
+export const ContactGetAll: React.FC<ContactGetAllProps> = (props) => {
+  const { contact } = props;
+
   const {
-    selectedClientId,
-    setSelectedClientId,
+    selectedContactId,
+    setSelectedContactId,
     setOpenModal,
     isAdmin,
     setIsAdmin,
+    contactRemove,
+    setRemoveContact,
   } = useContext(ContactContext);
-  console.log(selectedClientId);
-  console.log(isAdmin);
+  // const toggleModal = () => {
+  //   setRemoveContact((prevState) => !prevState);
+  // };
+
   return (
     <StyledLi>
+      <ModalEditContact IsOpen={contactRemove} />
       <StyledDiv>
-        <StyledP>Nome Completo: {contact.fullname}</StyledP> Email:{" "}
+        <StyledP>Nome Completo: {contact.fullname}</StyledP>
         <StyledP>{contact.email}</StyledP>
-        <StyledP>Telefone:{contact.telephone}</StyledP>{" "}
-        <StyledP> Data de cadastro do cliente:{contact.createdAt}</StyledP>
-        <StyledP>Pais: {contact.country}</StyledP> Email:{" "}
-        <StyledP>Estado:{contact.state}</StyledP>
-        <StyledP>Cidade:{contact.city}</StyledP>
-        <StyledP>Cep:{contact.zipCode}</StyledP>
-        <StyledP>Se o usuario é adminitrador:{contact.admin}</StyledP>
+        <StyledP>Telefone: {contact.telephone}</StyledP>
+        <StyledP>Data de cadastro do cliente: {contact.createdAt}</StyledP>
+        {contact.country && <StyledP>Pais: {contact.country}</StyledP>}
+        {contact.state && <StyledP>Estado: {contact.state}</StyledP>}
+        {contact.city && <StyledP>Cidade: {contact.city}</StyledP>}
+        {contact.zipCode && <StyledP>Cep: {contact.zipCode}</StyledP>}
         <StyledButton
           onClick={() => {
-            //setOpenModal(true);
-            setSelectedClientId(contact.id);
+            setRemoveContact(true);
+            setSelectedContactId(contact.id);
             setIsAdmin(contact.admin!);
           }}
         >
