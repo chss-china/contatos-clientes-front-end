@@ -7,7 +7,6 @@ import {
   StyledLi,
   StyledP,
 } from "../dashboardContacts/renderClientes/styles";
-import { ModalEditContact } from "../../modais/modaleditcontacts";
 
 export interface TlistContatos {
   //atualizei para lista de contatos que vai na função de registro que é a resposta do que nos retorna
@@ -38,18 +37,8 @@ interface ContactGetAllProps {
 export const ContactGetAll: React.FC<ContactGetAllProps> = (props) => {
   const { contact } = props;
 
-  const {
-    selectedContactId,
-    setSelectedContactId,
-    setOpenModal,
-    isAdmin,
-    setIsAdmin,
-    contactRemove,
-    setRemoveContact,
-  } = useContext(ContactContext);
-  // const toggleModal = () => {
-  //   setRemoveContact((prevState) => !prevState);
-  // };
+  const { setSelectedContactId, setIsAdmin, setRemoveContact } =
+    useContext(ContactContext);
 
   return (
     <>
@@ -70,7 +59,7 @@ export const ContactGetAll: React.FC<ContactGetAllProps> = (props) => {
               setIsAdmin(contact.admin!);
             }}
           >
-            Atualizar ou Excluir o Cliente
+            Atualizar ou Excluir o Cliente somente para administradores
           </StyledButton>
         </StyledDiv>
       </StyledLi>

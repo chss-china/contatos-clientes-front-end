@@ -3,12 +3,9 @@ import { ContactContext } from "../../providers/contactscontext";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useState } from "react";
-import { toast } from "react-toastify";
+
 import "react-toastify/dist/ReactToastify.css";
-import { useNavigate } from "react-router-dom";
 import { IregisterForm } from "../../providers/contactscontext";
-import { api } from "../../services/api";
 import {
   CloseButton,
   ModalForm,
@@ -36,8 +33,7 @@ const registerContactSchema = yup.object().shape({
 });
 
 export default function ModalRegisterContacts({ myisOpen }: TmyisOpen) {
-  const { setOpenModal, openModal, functionRegisterContact } =
-    useContext(ContactContext);
+  const { setOpenModal, functionRegisterContact } = useContext(ContactContext);
   const {
     register,
     handleSubmit,
@@ -47,7 +43,7 @@ export default function ModalRegisterContacts({ myisOpen }: TmyisOpen) {
   });
 
   const handleFormSubmit = (data: IregisterForm) => {
-    functionRegisterContact(data); // Chamando a função functionRegisterContact com os dados do formulário
+    functionRegisterContact(data);
   };
 
   if (myisOpen) {
@@ -100,20 +96,6 @@ export default function ModalRegisterContacts({ myisOpen }: TmyisOpen) {
 
           <section>
             <button type="submit">Cadastrar Contato</button>
-            <div>
-              {/* <span
-                onClick={() => {
-                  if (selectedClientId !== null) {
-                    functionClientRemove(selectedClientId);
-                  } else {
-                    // Mostrar mensagem de erro ou alerta caso não haja cliente selecionado
-                    toast.error("Nenhum cliente selecionado.");
-                  }
-                }}
-              >
-                Excluir Cliente
-              </span> */}
-            </div>
           </section>
         </ModalForm>
       </ModalWrapper>

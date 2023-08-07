@@ -13,9 +13,7 @@ import {
   ModalWrapper,
 } from "./styled";
 import { ContactContext } from "../../providers/contactscontext";
-interface TisOpen {
-  isOpen: boolean;
-}
+
 const registerContactSchema = yup.object().shape({
   fullname: yup.string().nullable().optional(),
   email: yup.string().email("E-mail inválido.").nullable().optional(),
@@ -34,13 +32,9 @@ interface TmyisOpen {
 export const ModalEditContact: React.FC<TmyisOpen> = ({ IsOpen }) => {
   const {
     functionContactEdit,
-    openModal,
-    setOpenModal,
     functionContactRemove,
     setRemoveContact,
     selectedContactId,
-    setSelectedContactId,
-    contactRemove,
   } = useContext(ContactContext);
 
   const {
@@ -53,6 +47,11 @@ export const ModalEditContact: React.FC<TmyisOpen> = ({ IsOpen }) => {
   {
   }
 
+  const handleUpdateAll = () => {
+    setTimeout(() => {
+      window.location.reload();
+    }, 5000);
+  };
   if (IsOpen) {
     return (
       <ModalWrapper>
@@ -101,7 +100,9 @@ export const ModalEditContact: React.FC<TmyisOpen> = ({ IsOpen }) => {
           {errors.telephone && <p>{errors.telephone.message}</p>}
 
           <section>
-            <button>Salvar Alterações</button>
+            <button onClick={() => handleUpdateAll()} type="submit">
+              Salvar Alterações
+            </button>
             <div>
               <span
                 onClick={() => {

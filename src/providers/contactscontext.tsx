@@ -6,15 +6,10 @@ import "react-toastify/dist/ReactToastify.css";
 import { SubmitHandler } from "react-hook-form";
 
 interface IValueProps {
-  //functionRegisterContact: (data: IregisterForm);
-  ///functionClientEdit: (data: TupdateClient) => void;
-  // clientsGet: Tlistclients[];
   openModal: boolean;
   setOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
-  // functionClientRemove: (id: number) => void;
   selectedContactId: number | null;
   setSelectedContactId: React.Dispatch<React.SetStateAction<number | null>>;
-  //refresh: () => Promise<void>;
   isAdmin: boolean;
   setIsAdmin: React.Dispatch<React.SetStateAction<boolean>>;
   getContacts: TlistContatos[];
@@ -30,10 +25,7 @@ export const ContactContext = createContext({} as IValueProps);
 interface iRegisterChildrenProps {
   children: React.ReactNode;
 }
-interface Ttoken {
-  tokenClient: string;
-}
-//ja mudei interface para  de contatos na função de registro
+
 export interface IregisterForm {
   fullname: string;
   email: string;
@@ -46,13 +38,6 @@ export interface IregisterForm {
   country: string;
 }
 
-interface ILoginForm {
-  email: string;
-  password: string;
-}
-interface iLoginUser {
-  token: string;
-}
 interface infoClient {
   fullname: string;
   email: string;
@@ -77,7 +62,6 @@ interface TupdateContact {
   country?: string | null | undefined;
 }
 export interface TlistContatos {
-  //atualizei para lista de contatos que vai na função de registro que é a resposta do que nos retorna
   id: number;
   fullname: string;
   email: string;
@@ -99,15 +83,7 @@ export interface TlistContatos {
   };
 }
 
-interface clientAuthentication {
-  id: number;
-  fullname: string;
-  email: string;
-}
 export const ContactProvider = ({ children }: iRegisterChildrenProps) => {
-  // const [useLogin, setUserLogin] = useState({} as iLoginUser);
-  // const [contactInfo, setContactInfo] = useState({} as infoClient[]); ///mudei o nome para contatos,
-  // e o estate que vai função de regiester
   const [getContacts, setGetContacts] = useState<TlistContatos[]>([]);
   const [postContacts, setPostContacts] = useState<TlistContatos>();
   const [selectedContactId, setSelectedContactId] = useState<number | null>(
@@ -115,23 +91,9 @@ export const ContactProvider = ({ children }: iRegisterChildrenProps) => {
   );
   const [openModal, setOpenModal] = useState(false);
   const [contactRemove, setRemoveContact] = useState(false);
-  // const [clientIdRegister, setClientIdRegister] = useState([]);
-  // const [clientDataAuthentication, setClientDataAuthentication] = useState(
-  //   {} as clientAuthentication
-  // );
 
   const [isAdmin, setIsAdmin] = useState(false);
-  // const refresh = async () => {
-  //   try {
-  //     const res = await api.get("/clients");
-  //     console.log("to aqui 2 ");
-  //     setClientsGet(res.data);
-  //   } catch (err) {
-  //     console.error(err);
-  //   }
-  // };
-  // console.log("to aqui 3");
-  //const navigate = useNavigate();
+
   const functionRegisterContact = async (formData: IregisterForm) => {
     const tokenClient = localStorage.getItem("@TokenClient");
     const headers = {
@@ -142,10 +104,6 @@ export const ContactProvider = ({ children }: iRegisterChildrenProps) => {
       const response = await api.post("/contacts", formData, {
         headers: headers,
       });
-
-      console.log(response.data); // Aqui você pode tratar os dados retornados pela API após o cadastro
-
-      // Dados do contato
       const {
         id,
         fullname,
@@ -164,7 +122,6 @@ export const ContactProvider = ({ children }: iRegisterChildrenProps) => {
       console.log(fullname);
       console.log(email);
 
-      // Dados do cliente associado ao contato
       const {
         id: clientId,
         fullname: clientFullname,
@@ -190,7 +147,7 @@ export const ContactProvider = ({ children }: iRegisterChildrenProps) => {
   };
   const fetchClients = async () => {
     try {
-      const response = await api.get("/contacts"); // Replace with your API endpoint
+      const response = await api.get("/contacts");
       setGetContacts(response.data);
     } catch (error) {
       console.error("Erro ao buscar clientes:", error);
@@ -198,11 +155,8 @@ export const ContactProvider = ({ children }: iRegisterChildrenProps) => {
   };
 
   useEffect(() => {
-    // Fetch clients initially when the component mounts
     fetchClients();
-    // Fetch clients every 5 seconds using setInterval
     const intervalId = setInterval(fetchClients, 3000);
-    // Clean up the interval when the component unmounts
     return () => clearInterval(intervalId);
   }, []);
 
@@ -214,9 +168,6 @@ export const ContactProvider = ({ children }: iRegisterChildrenProps) => {
           Authorization: `Bearer ${tokenClient}`,
         },
       });
-      console.log("passei na response", response.data);
-
-      /// console.log(response);
 
       if (response.status === 200) {
         toast.success("Cliente alterado com sucesso");
@@ -225,8 +176,6 @@ export const ContactProvider = ({ children }: iRegisterChildrenProps) => {
       }
     } catch (error: any) {
       if (error.response) {
-        console.log(error.response.status);
-        console.log("cai no catch do if");
         toast(error.response.data.message);
       } else {
         toast.error(error.message);
@@ -237,25 +186,18 @@ export const ContactProvider = ({ children }: iRegisterChildrenProps) => {
 
   const functionContactRemove = async (id: number) => {
     try {
-      // Fazer a requisição para remover o cliente do servidor através da API
-      //  if (isAdmin || selectedClientId == clientDataAuthentication.id) {
       const response = await api.delete(`/contacts/${id}`, {
         headers: {
           Authorization: `Bearer ${tokenClient}`,
         },
       });
-      // Verificar se o cliente removido é o mesmo que está selecionado
+
       if (selectedContactId === id) {
         setSelectedContactId(null);
       }
 
-      // Atualizar a lista de clientes após a remoção
-      // refresh();
-
-      // Exemplo de mensagem de sucesso
       toast.success("Cliente removido com sucesso!");
     } catch (error: any) {
-      // Lidar com erros de requisição ou exibição de mensagem de erro
       if (error.response) {
         console.log("Erro na requisição:", error.response.data);
         toast.error(error.response.data.message);
@@ -269,29 +211,16 @@ export const ContactProvider = ({ children }: iRegisterChildrenProps) => {
       }
     }
   };
-  const clientId = localStorage.getItem("@UserId");
-  // const GetRefresh = async () => {
-  //   try {
-  //     const response = await api.get(`/clients/${clientId}`);
-  //     console.log(response.data);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
+
   return (
     <>
       <ContactContext.Provider
         value={{
-          // functionRegisterContact,
-          //  clientsGet,
-          // functionClientEdit,
           openModal,
           setOpenModal,
           isAdmin,
           setIsAdmin,
           functionContactRemove,
-          //  functionClientRemove,
-          // refresh,
           selectedContactId,
           setSelectedContactId,
           setGetContacts,

@@ -45,7 +45,11 @@ export default function ModalEdit({ isOpen }: TisOpen) {
   });
   {
   }
-
+  const handleUpdateAll = () => {
+    setTimeout(() => {
+      window.location.reload();
+    }, 5000);
+  };
   if (isOpen) {
     return (
       <ModalWrapper>
@@ -72,7 +76,9 @@ export default function ModalEdit({ isOpen }: TisOpen) {
           {errors.password && <p>{errors.password.message}</p>}
 
           <section>
-            <button type="submit">Salvar Alterações</button>
+            <button onClick={() => handleUpdateAll()} type="submit">
+              Salvar Alterações
+            </button>
             <div>
               <span
                 onClick={() => {

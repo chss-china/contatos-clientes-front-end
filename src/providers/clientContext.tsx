@@ -17,6 +17,11 @@ interface IValueProps {
   GetRefresh: () => void;
   isAdmin: boolean;
   setIsAdmin: React.Dispatch<React.SetStateAction<boolean>>;
+  setSearch: React.Dispatch<React.SetStateAction<string>>;
+  search: string;
+  setFilteredClient: React.Dispatch<React.SetStateAction<string>>;
+  filteredClient: string;
+  FilterListClients: infoClient[];
 }
 
 export const ClientContext = createContext({} as IValueProps);
@@ -69,10 +74,14 @@ export const ClientProvider = ({ children }: iRegisterChildrenProps) => {
   const [clientInfo, setClientInfo] = useState({} as infoClient[]);
   const [clientsGet, setClientsGet] = useState([]);
   const [selectedClientId, setSelectedClientId] = useState<number | null>(null);
+
   const [openModal, setOpenModal] = useState(false);
   const [clientIdRegister, setClientIdRegister] = useState([]);
   const [isAdmin, setIsAdmin] = useState(false);
-  const [client, setclient] = useState({ isAdmin: false });
+
+  const [search, setSearch] = useState("");
+  const [filteredClient, setFilteredClient] = useState("");
+
   const refresh = async () => {
     try {
       const res = await api.get("/clients");
@@ -104,6 +113,9 @@ export const ClientProvider = ({ children }: iRegisterChildrenProps) => {
         "@clientId",
         response.data.client.id
       );
+      const converString = JSON.stringify(response.data.client);
+      const dataClient = localStorage.setItem("@itensClients", converString);
+
       fetchClients();
       console.log(response.data.client);
       navigate("/dashboard");
@@ -122,7 +134,6 @@ export const ClientProvider = ({ children }: iRegisterChildrenProps) => {
       console.error("Erro ao buscar clientes:", error);
     }
   };
-
   useEffect(() => {
     fetchClients();
     const intervalId = setInterval(fetchClients, 5000);
@@ -131,17 +142,13 @@ export const ClientProvider = ({ children }: iRegisterChildrenProps) => {
 
   const tokenClient = localStorage.getItem("@TokenClient");
   const functionClientEdit = async (data: TupdateClient) => {
-    console.log("cheguei");
     try {
       const response = await api.patch(`/clients/${selectedClientId}`, data, {
         headers: {
           Authorization: `Bearer ${tokenClient}`,
         },
       });
-      console.log("passei na response", response);
       GetRefresh();
-
-      console.log(response);
 
       if (response.status === 200) {
         console.log("estou no erro");
@@ -200,6 +207,13 @@ export const ClientProvider = ({ children }: iRegisterChildrenProps) => {
       console.log(error);
     }
   };
+  const FilterListClients = clientsGet.filter((client: any) => {
+    console.log(client);
+    return search === ""
+      ? true
+      : client.fullname.toLowerCase().includes(search.toLowerCase()) ||
+          client.email.toLowerCase().includes(search.toLowerCase());
+  });
 
   return (
     <>
@@ -217,6 +231,11 @@ export const ClientProvider = ({ children }: iRegisterChildrenProps) => {
           GetRefresh,
           isAdmin,
           setIsAdmin,
+          search,
+          setSearch,
+          setFilteredClient,
+          filteredClient,
+          FilterListClients,
         }}
       >
         {children}

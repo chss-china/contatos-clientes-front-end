@@ -1,28 +1,15 @@
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import ModalRegisterContacts from "../../../modais/modal.contactregister";
 import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
 import { ContactContext } from "../../../../providers/contactscontext";
 import { Button, ClientList, Title } from "../../styles.dashboard";
 import { ContactGetAll } from "../../rendercontacts/rendercontacts";
 import { ModalEditContact } from "../../../modais/modaleditcontacts";
-import ModalEdit from "../../../modais/modal";
 
 export const DashboardContacts = () => {
-  const {
-    setOpenModal,
-    openModal,
-    setGetContacts,
-    getContacts,
-    isAdmin,
-    setIsAdmin,
-    contactRemove,
-  } = useContext(ContactContext);
+  const { setOpenModal, openModal, getContacts, contactRemove } =
+    useContext(ContactContext);
   const navigate = useNavigate();
-  // useEffect(() => {
-  //   const fetchData = async () => await refresh();
-  //   fetchData();
-  // }, []);
 
   function navigateLogin() {
     localStorage.getItem("@TokenClient");

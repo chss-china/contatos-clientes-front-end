@@ -35,12 +35,10 @@ const RegisterForm = () => {
     resolver: yupResolver(formSchemaRegister),
   });
   const { isAdmin, setIsAdmin } = useContext(ClientContext);
-  console.log(isAdmin);
 
   const handleAdminInputChange = (event: any) => {
     setIsAdmin(event.target.checked);
   };
-  console.log(isAdmin);
 
   return (
     <FormContainer onSubmit={handleSubmit(functionRegister)}>
