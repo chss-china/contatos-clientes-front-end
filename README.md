@@ -12,9 +12,9 @@
 - React Toastify
 - zod
  # Instalação de dependencias e pacotes
-1. npm install para instalar todas depedencias do projeto, para instalar todas dependencias até do typescript tem que estar no 
+ 1. `npm install` para instalar todas depedencias do projeto, para instalar todas dependencias até do typescript tem que estar no 
 diretorio da raiz
-2. entrar na pasta do projeto e executar npm install para instalar as outras dependencias
+3. entrar na pasta do projeto e executar `npm install` para instalar as outras dependencias
 
 # Rodar o servidor
 3. comando para iniciar o servidor npm run dev.
@@ -56,7 +56,7 @@ O acesso às informações de contato é restrito e somente os administradores t
 
 - Implementei proteção nas rotas da aplicação para garantir que a página que lista os contatos seja acessível por usuarios logados ou administradores.
 
-- A criação de contatos é restrita aos administradores. Ao criar um contato para um cliente, verifique se o usuário logado é um administrador antes de permitir a criação do contato.
+- A criação de contatos,atualização e exclusão é restrita aos administradores. Ao criar um contato para um cliente, verifique se o usuário logado é um administrador antes de permitir a criação do contato.
 
 - O que foi entregue até o momento é apenas um exemplo do que foi compreendido e implementado no prazo estipulado.
 O projeto não será utilizado sem que todas as funcionalidades integradas estejam concluídas.
